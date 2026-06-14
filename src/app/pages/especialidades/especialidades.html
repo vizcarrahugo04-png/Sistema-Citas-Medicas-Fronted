@@ -1,0 +1,60 @@
+<h1>Gestion de Especialidades</h1>
+
+<h2>{{idEspecialidad === 0 ? 'Nueva Especialidad': 'Editar Especialidad'}}</h2>
+
+<form>
+    <input
+    type="text"
+    placeholder="Nombre"
+    name="nombre"
+    [(ngModel)]="nombre">
+    <input
+    type="text"
+    placeholder="Descripcion"
+    name="descripcion"
+    [(ngModel)]="descripcion">
+
+    <label>
+        Estado:
+        <select name="estado" [(ngModel)]="estado">
+            <option [ngValue]="true">Activo</option>
+            <option [ngValue]="false">Inactivo</option>
+        </select>
+    </label>
+
+    <button type="button" (click)="guardar()">
+        {{ idEspecialidad === 0 ? 'Guardar':'Actualizar'}}
+    </button>
+
+    <button type="button" (click)="limpiar()">
+        Limpiar
+    </button>
+</form>
+
+<hr>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let Especialidad of especialidades">
+            <td>{{Especialidad.idEspecialidad}}</td>
+            <td>{{Especialidad.nombre}}</td>
+            <td>{{Especialidad.descripcion}}</td>
+            <td>{{Especialidad.estado ? 'Activo':'Inactivo'}}</td>
+            <td>
+                <button type="button" (click)="editar(Especialidad)">Editar</button>
+                <button type="button" (click)="eliminar(Especialidad.idEspecialidad)">Eliminar
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

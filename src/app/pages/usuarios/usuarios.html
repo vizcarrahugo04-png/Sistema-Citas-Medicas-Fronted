@@ -1,0 +1,79 @@
+<h1>Gestión de Usuarios</h1>
+
+<h2>{{idUsuario === 0 ? 'Nuevo Usuario':'Editar Usuario'}}</h2>
+
+<form>
+    <input
+    type="text"
+    placeholder="Username"
+    name="username"
+    [(ngModel)]="username">
+
+    <input
+    type="text"
+    placeholder="Correo"
+    name="correo"
+    [(ngModel)]="correo">
+
+    <input
+    type="password"
+    placeholder="Password"
+    name="password"
+    [(ngModel)]="password">
+    <label>
+        Estado:
+        <select name="estado" [(ngModel)]="estado">
+            <option [ngValue]="true">Activo</option>
+            <option [ngValue]="false">Inactivo</option>
+        </select>
+    </label>
+
+    <label>
+        Rol:
+        <select name="idRol" [(ngModel)]="idRol">
+            <option [ngValue]="0">Seleccione un rol</option>
+            <option *ngFor="let rol of roles" [ngValue]="rol.idRol">
+                {{rol.nombre}}
+            </option>
+        </select>
+    </label>
+
+    <button type="button" (click)="guardar()">
+        {{ idUsuario === 0 ? 'Guardar':'Actualizar'}}
+    </button>
+
+    <button type="button" (click)="limpiar()">
+        Limpiar
+    </button>
+</form>
+
+<hr>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Correo</th>
+            <th>Password</th>
+            <th>Estado</th>
+            <th>ID Rol</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let Usuario of usuarios">
+            <td>{{Usuario.idUsuario}}</td>
+            <td>{{Usuario.username}}</td>
+            <td>{{Usuario.correo}}</td>
+            <td>{{Usuario.password}}</td>
+            <td>{{Usuario.estado?'activo':'Inactivo'}}</td>
+            <td>{{Usuario.idRol}}</td>
+            <td>
+                <button type="button" (click)="editar(Usuario)">Editar</button>
+                <button type="button" (click)="eliminar(Usuario.idUsuario)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

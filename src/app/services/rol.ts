@@ -14,4 +14,16 @@ export class RolService {
     return this.http.get<any>(this.url);
   }
 
+  save(rol: Rol): Observable<any> {
+  return this.http.post<any>(this.url, rol);
+}
+  
+  update(id:number,rol:Rol): Observable<any> {
+    return this.http.put<any>(`${this.url}/${id}`,rol);
+  }
+
+  delete(id: number): Observable<any> {
+  return this.http.delete<any>(`${this.url}/${id}`);
+}
+
 }

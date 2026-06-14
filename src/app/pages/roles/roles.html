@@ -1,19 +1,49 @@
-<h1>Lista de Roles</h1>
+<h1>Gestion de Roles</h1>
+
+<h2>{{ idRol === 0 ? 'Nuevo Rol' : 'Editar Rol'}}</h2>
+
+<form>
+    <input
+    type="text"
+    placeholder="Nombre"
+    name="nombre"
+    [(ngModel)] = "nombre">
+    <input
+    type="text"
+    placeholder="Descripción"
+    name="descripción"
+    [(ngModel)] = "descripcion">
+
+    <button type="button" (click)="guardar()">
+        {{idRol === 0 ? 'Guardar':'Actualizar'}}
+    </button>
+
+    <button type="button" (click)="limpiar()">
+        limpiar
+    </button>
+</form>
+
+<hr>
 
 <table border="1">
-<thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-    </tr>
-</thead>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <td>Nombre</td>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-<tbody>
-    <tr *ngFor="let rol of roles">
-        <td>{{ rol.idRol }}</td>
-        <td>{{ rol.nombre }}</td>
-        <td>{{ rol.descripcion }}</td>
-    </tr>
-</tbody>
+    <tbody>
+        <tr *ngFor="let rol of roles">
+            <td>{{rol.idRol}}</td>
+            <td>{{rol.nombre}}</td>
+            <td>{{rol.descripcion}}</td>
+            <td>
+                <button type="button" (click)="editar(rol)">Editar</button>
+                <button type="button" (click)="eliminar(rol.idRol)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
 </table>

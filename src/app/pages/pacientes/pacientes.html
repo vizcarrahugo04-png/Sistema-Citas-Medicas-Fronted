@@ -1,0 +1,106 @@
+<h1>Gestión de Pacientes</h1>
+
+<h2>{{idPaciente ===0?'Nuevo Paciente':'Editar Paciente'}}</h2>
+
+<form>
+    <input 
+    type="text"
+    placeholder="Nombres"
+    name="nombres"
+    [(ngModel)]="nombres">
+    <input
+    type="text"
+    placeholder="Apellidos"
+    name="apellidos"
+    [(ngModel)]="apellidos">
+    <input
+    type="text"
+    placeholder="DNI"
+    name="dni"
+    [(ngModel)]="dni">
+    <input
+    type="text"
+    placeholder="Telefono"
+    name="telefono"
+    [(ngModel)]="telefono">
+    <input
+    type="text"
+    placeholder="Direccion"
+    name="direccion"
+    [(ngModel)]="direccion">
+
+    <input
+    type="date"
+    name="fechaNacimiento"
+    [(ngModel)]="fechaNacimiento">
+
+    <label>
+        Sexo:
+        <select name="sexo" [(ngModel)]="sexo">
+            <option value="">Seleccione sexo</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+        </select>
+    </label>
+
+    <label>
+        Estado:
+        <select name="estado" [(ngModel)]="estado">
+            <option [ngValue]="true">Activo</option>
+            <option [ngValue]="false">Inactivo</option>
+        </select>
+    </label>
+
+    <label>
+        Usuario:
+        <select name="idUsuario" [(ngModel)]="idUsuario">
+            <option [ngValue]="0">Seleccione Usuario</option>
+            <option *ngFor="let Usuario of usuarios" [ngValue]="Usuario.idUsuario">{{Usuario.username}} - {{Usuario.correo}}
+            </option>
+        </select>
+    </label>
+
+    <button type="button" (click)="guardar()">
+        {{idPaciente === 0 ? 'Guardar':'Actualizar'}}
+    </button>
+
+    <button type="button" (click)="limpiar()">Limpiar</button>
+</form>
+
+<hr>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>DNI</th>
+            <th>Telefono</th>
+            <th>Direccion</th>
+            <th>Fecha Nac.</th>
+            <th>Sexo</th>
+            <th>Estado</th>
+            <th>idUsuario</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let Paciente of pacientes">
+            <td>{{Paciente.idPaciente}}</td>
+            <td>{{Paciente.nombres}}</td>
+            <td>{{Paciente.apellidos}}</td>
+            <td>{{Paciente.dni}}</td>
+            <td>{{Paciente.telefono}}</td>
+            <td>{{Paciente.direccion}}</td>
+            <td>{{Paciente.fechaNacimiento}}</td>
+            <td>{{Paciente.sexo}}</td>
+            <td>{{Paciente.estado?'Activo':'Inactivo'}}</td>
+            <td>{{Paciente.idUsuario}}</td>
+            <td>
+                <button type="button" (click)="editar(Paciente)">Editar</button>
+                <button type="button" (click)="eliminar(Paciente.idPaciente)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>

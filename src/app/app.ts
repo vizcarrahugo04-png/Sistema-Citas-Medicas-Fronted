@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
-import { Roles } from "./pages/roles/roles";
+import { Pacientes } from "./pages/pacientes/pacientes";
 
 @Component({
   selector: 'app-root',
-  imports: [Roles],
+  imports: [Pacientes],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
