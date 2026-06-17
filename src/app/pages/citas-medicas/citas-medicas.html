@@ -1,0 +1,104 @@
+<h1>Gestion de Citas Medicas</h1>
+
+<h2>{{idCita === 0 ?'Nueva Cita':'Editar Cita'}}</h2>
+
+<form>
+    <input
+    type="date"
+    name="fecha"
+    [(ngModel)]="fecha">
+    <input
+    type="time"
+    name="hora"
+    [(ngModel)]="hora">
+    <input
+    type="text"
+    name="motivo"
+    [(ngModel)]="motivo">
+    <label>
+        Estado:
+        <select name="estado" [(ngModel)]="estado">
+            <option value="PENDIENTE">PENDIENTE</option>
+            <option value="CONFIRMADA">CONFIRMADA</option>
+            <option value="CANCELADA">CANCELADA</option>
+            <option value="ATENDIDA">ATENDIDA</option>
+        </select>
+    </label>
+
+    <label>
+        Paciente:
+        <select name="idPaciente" [(ngModel)]="idPaciente">
+            <option [ngValue]="0">Seleccione paciente</option>
+            <option *ngFor="let paciente of pacientes" [ngValue]="paciente.idPaciente">{{paciente.nombres}}{{paciente.apellidos}}
+            </option>
+        </select>
+    </label>
+
+    <label>
+        Doctor:
+        <select name="idDoctor" [(ngModel)]="idDoctor">
+            <option [ngValue]="0">Seleccione doctor</option>
+            <option *ngFor="let doctor of doctores" [ngValue]="doctor.idDoctor">{{doctor.nombres}}{{doctor.apellidos}}
+            </option>
+        </select>
+    </label>
+
+    <label>
+        Horario:
+            <select name="idHorario" [(ngModel)]="idHorario">
+                <option [ngValue]="0">Seleccione horario</option>
+                <option *ngFor="let horario of horarios" [ngValue]="horario.idHorario">
+                {{ horario.dia }} - {{ horario.horaInicio }} a {{ horario.horaFin }}
+                </option>
+            </select>
+    </label>
+
+    <label>
+        Consultorio:
+        <select name="idConsultorio" [(ngModel)]="idConsultorio">
+            <option [ngValue]="0">Seleccione consultorio</option>
+            <option *ngFor="let consultorio of consultorios" [ngValue]="consultorio.idConsultorio">
+            {{ consultorio.numero }} - Piso {{ consultorio.piso }}
+            </option>
+        </select>
+    </label>
+
+    <button type="button" (click)="guardar()">{{idCita === 0 ?'Guardar':'Actualizar'}}</button>
+    <button type="button" (click)="limpiar()">Limpiar</button>
+</form>
+
+<hr>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Motivo</th>
+            <th>Estado</th>
+            <th>ID Paciente</th>
+            <th>ID Doctor</th>
+            <th>ID Horario</th>
+            <th>ID Consultorio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let cita of citas">
+            <td>{{ cita.idCita }}</td>
+            <td>{{ cita.fecha }}</td>
+            <td>{{ cita.hora }}</td>
+            <td>{{ cita.motivo }}</td>
+            <td>{{ cita.estado }}</td>
+            <td>{{ cita.idPaciente }}</td>
+            <td>{{ cita.idDoctor }}</td>
+            <td>{{ cita.idHorario }}</td>
+            <td>{{ cita.idConsultorio }}</td>
+            <td>
+                <button type="button" (click)="editar(cita)">Editar</button>
+                <button type="button" (click)="eliminar(cita.idCita)">Eliminar</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
