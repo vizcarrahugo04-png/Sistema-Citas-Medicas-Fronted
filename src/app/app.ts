@@ -1,9 +1,9 @@
-import { Component } from "@angular/core";
-import { Pacientes } from "./pages/pacientes/pacientes";
+import { Component } from '@angular/core';
+import { HistorialCitas } from './pages/historial-citas/historial-citas';
 
 @Component({
   selector: 'app-root',
-  imports: [Pacientes],
+  imports: [HistorialCitas],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

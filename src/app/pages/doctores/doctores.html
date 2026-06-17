@@ -1,0 +1,82 @@
+<h1>Gestión de Doctores</h1>
+
+<h2>{{ idDoctor === 0 ? 'Nuevo Doctor' : 'Editar Doctor' }}</h2>
+
+<form>
+    <input type="text" placeholder="Nombres" name="nombres" [(ngModel)]="nombres">
+    <input type="text" placeholder="Apellidos" name="apellidos" [(ngModel)]="apellidos">
+    <input type="text" placeholder="CMP" name="cmp" [(ngModel)]="cmp">
+    <input type="text" placeholder="Teléfono" name="telefono" [(ngModel)]="telefono">
+    <input type="email" placeholder="Correo profesional" name="correoProfesional" [(ngModel)]="correoProfesional">
+
+    <label>
+    Estado:
+    <select name="estado" [(ngModel)]="estado">
+        <option [ngValue]="true">Activo</option>
+        <option [ngValue]="false">Inactivo</option>
+    </select>
+    </label>
+
+    <label>
+    Usuario:
+    <select name="idUsuario" [(ngModel)]="idUsuario">
+        <option [ngValue]="0">Seleccione usuario</option>
+        <option *ngFor="let usuario of usuarios" [ngValue]="usuario.idUsuario">
+        {{ usuario.username }} - {{ usuario.correo }}
+        </option>
+    </select>
+    </label>
+
+    <label>
+    Especialidad:
+    <select name="idEspecialidad" [(ngModel)]="idEspecialidad">
+        <option [ngValue]="0">Seleccione especialidad</option>
+        <option *ngFor="let especialidad of especialidades" [ngValue]="especialidad.idEspecialidad">
+        {{ especialidad.nombre }}
+        </option>
+    </select>
+    </label>
+
+    <button type="button" (click)="guardar()">
+    {{ idDoctor === 0 ? 'Guardar' : 'Actualizar' }}
+    </button>
+
+    <button type="button" (click)="limpiar()">Limpiar</button>
+</form>
+
+<hr>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>CMP</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Estado</th>
+        <th>ID Usuario</th>
+        <th>ID Especialidad</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let doctor of doctores">
+        <td>{{ doctor.idDoctor }}</td>
+        <td>{{ doctor.nombres }}</td>
+        <td>{{ doctor.apellidos }}</td>
+        <td>{{ doctor.cmp }}</td>
+        <td>{{ doctor.telefono }}</td>
+        <td>{{ doctor.correoProfesional }}</td>
+        <td>{{ doctor.estado ? 'Activo' : 'Inactivo' }}</td>
+        <td>{{ doctor.idUsuario }}</td>
+        <td>{{ doctor.idEspecialidad }}</td>
+        <td>
+        <button type="button" (click)="editar(doctor)">Editar</button>
+        <button type="button" (click)="eliminar(doctor.idDoctor)">Eliminar</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
