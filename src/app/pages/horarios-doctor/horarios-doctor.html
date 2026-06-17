@@ -1,0 +1,85 @@
+<h1>Gestión de Horarios Doctor</h1>
+
+<h2>{{ idHorario === 0 ? 'Nuevo Horario' : 'Editar Horario' }}</h2>
+
+<form>
+    <label>
+    Día:
+        <select name="dia" [(ngModel)]="dia">
+            <option value="">Seleccione día</option>
+            <option value="Lunes">Lunes</option>
+            <option value="Martes">Martes</option>
+            <option value="Miércoles">Miércoles</option>
+            <option value="Jueves">Jueves</option>
+            <option value="Viernes">Viernes</option>
+            <option value="Sábado">Sábado</option>
+            <option value="Domingo">Domingo</option>
+        </select>
+    </label>
+
+    <input type="time" name="horaInicio" [(ngModel)]="horaInicio">
+    <input type="time" name="horaFin" [(ngModel)]="horaFin">
+
+    <input
+    type="number"
+    placeholder="Cupos disponibles"
+    name="cuposDisponibles"
+    [(ngModel)]="cuposDisponibles">
+
+    <label>
+    Estado:
+    <select name="estado" [(ngModel)]="estado">
+        <option [ngValue]="true">Activo</option>
+        <option [ngValue]="false">Inactivo</option>
+    </select>
+    </label>
+
+    <label>
+    Doctor:
+        <select name="idDoctor" [(ngModel)]="idDoctor">
+            <option [ngValue]="0">Seleccione doctor</option>
+            <option *ngFor="let doctor of doctores" [ngValue]="doctor.idDoctor">
+        {{ doctor.nombres }} {{ doctor.apellidos }}
+            </option>
+        </select>
+    </label>
+
+    <button type="button" (click)="guardar()">
+    {{ idHorario === 0 ? 'Guardar' : 'Actualizar' }}
+    </button>
+
+    <button type="button" (click)="limpiar()">Limpiar</button>
+</form>
+
+<hr>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Día</th>
+            <th>Inicio</th>
+            <th>Fin</th>
+            <th>Cupos</th>
+            <th>Estado</th>
+            <th>ID Doctor</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let horario of horarios">
+            <td>{{ horario.idHorario }}</td>
+            <td>{{ horario.dia }}</td>
+            <td>{{ horario.horaInicio }}</td>
+            <td>{{ horario.horaFin }}</td>
+            <td>{{ horario.cuposDisponibles }}</td>
+            <td>{{ horario.estado ? 'Activo' : 'Inactivo' }}</td>
+            <td>{{ horario.idDoctor }}</td>
+        <td>
+        <button type="button" (click)="editar(horario)">Editar</button>
+        <button type="button" (click)="eliminar(horario.idHorario)">Eliminar</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
