@@ -1,0 +1,105 @@
+<h1>Gestión de Historial de Citas</h1>
+
+<h2>
+  {{ idHistorial === 0 ? 'Nuevo Historial' : 'Editar Historial' }}
+</h2>
+
+<input
+  type="datetime-local"
+  name="fechaCambio"
+  [(ngModel)]="fechaCambio">
+
+<input
+  type="text"
+  placeholder="Estado anterior"
+  name="estadoAnterior"
+  [(ngModel)]="estadoAnterior">
+
+<input
+  type="text"
+  placeholder="Estado nuevo"
+  name="estadoNuevo"
+  [(ngModel)]="estadoNuevo">
+
+<input
+  type="text"
+  placeholder="Observación"
+  name="observacion"
+  [(ngModel)]="observacion">
+
+<label>Cita:</label>
+
+<select
+  name="idCita"
+  [(ngModel)]="idCita">
+
+  <option [ngValue]="0">
+    Seleccione cita
+  </option>
+
+  <option
+    *ngFor="let cita of citas"
+    [ngValue]="cita.idCita">
+
+    Cita #{{ cita.idCita }}
+
+  </option>
+
+</select>
+
+<button type="button" (click)="guardar()">
+  {{ idHistorial === 0 ? 'Guardar' : 'Actualizar' }}
+</button>
+
+<button type="button" (click)="limpiar()">
+  Limpiar
+</button>
+
+<hr>
+
+<table border="1">
+
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Fecha</th>
+      <th>Estado Anterior</th>
+      <th>Estado Nuevo</th>
+      <th>Observación</th>
+      <th>ID Cita</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr *ngFor="let historial of historiales">
+
+      <td>{{ historial.idHistorial }}</td>
+      <td>{{ historial.fechaCambio }}</td>
+      <td>{{ historial.estadoAnterior }}</td>
+      <td>{{ historial.estadoNuevo }}</td>
+      <td>{{ historial.observacion }}</td>
+      <td>{{ historial.idCita }}</td>
+
+      <td>
+
+        <button
+          type="button"
+          (click)="editar(historial)">
+          Editar
+        </button>
+
+        <button
+          type="button"
+          (click)="eliminar(historial.idHistorial)">
+          Eliminar
+        </button>
+
+      </td>
+
+    </tr>
+
+  </tbody>
+
+</table>
