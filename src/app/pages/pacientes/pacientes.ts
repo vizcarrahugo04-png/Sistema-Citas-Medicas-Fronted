@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { PacienteService } from "../../services/paciente";
 import { UsuarioService } from "../../services/usuario";
@@ -22,6 +22,7 @@ export class Pacientes implements OnInit{
   private UsuarioService = inject(UsuarioService);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   pacientes: Paciente[]=[];
   usuarios: Usuario[]=[];
@@ -38,21 +39,33 @@ export class Pacientes implements OnInit{
   idUsuario:number=0;
   
   ngOnInit(): void {
-    this.listarUsuarios();
-    this.ListarPacientes();
-  }
+  this.listarPacientes();
+  this.listarUsuarios();
+}
 
-  ListarPacientes(): void {
-    this.pacienteService.findAll().subscribe(data =>{
-      this.pacientes=data._embedded.pacienteDTOList;
-    });
-  }
+  listarPacientes(): void {
+  this.pacienteService.findAll().subscribe({
+    next: (data) => {
+      this.pacientes = data._embedded.pacienteDTOList;
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.log('Error al listar pacientes:', error);
+    }
+  });
+}
 
-  listarUsuarios():void{
-    this.UsuarioService.findAll().subscribe(data=>{
-      this.usuarios=data._embedded.usuarioDTOList;
-    })
-  }
+  listarUsuarios(): void {
+  this.UsuarioService.findAll().subscribe({
+    next: (data) => {
+      this.usuarios = data._embedded.usuarioDTOList;
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.log('Error al listar usuarios:', error);
+    }
+  });
+}
 
   guardar():void{
     
@@ -72,7 +85,7 @@ export class Pacientes implements OnInit{
       this.pacienteService.save(paciente).subscribe(()=>{
         alert('Paciente registrado correctamente');
         this.limpiar();
-        this.ListarPacientes();
+        this.listarPacientes();
       });
     }else{
       const paciente:Paciente = {
@@ -91,7 +104,7 @@ export class Pacientes implements OnInit{
       this.pacienteService.update(this.idPaciente, paciente).subscribe(()=>{
         alert('Paciente actualizado correctamente');
         this.limpiar();
-        this.ListarPacientes();
+        this.listarPacientes();
       })
     }
   }
@@ -113,7 +126,7 @@ export class Pacientes implements OnInit{
     if(confirm('¿Seguro que deseas eliminar este paciente?')){
       this.pacienteService.delete(id).subscribe(()=>{
         alert('Paciente eliminado correctamente');
-        this.ListarPacientes();
+        this.listarPacientes();
       })
     }
   }

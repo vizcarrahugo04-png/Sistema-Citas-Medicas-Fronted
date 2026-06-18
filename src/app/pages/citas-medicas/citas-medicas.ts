@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
 import { CitaMedicaService } from "../../services/cita-medica";
@@ -28,6 +28,7 @@ export class CitasMedicas implements OnInit {
   private doctorService = inject(DoctorService);
   private consultorioService = inject(ConsultorioService);
   private horarioService = inject(HorarioDoctorService);
+  private cdr = inject(ChangeDetectorRef);
 
   citas: CitaMedica[] = [];
   pacientes: Paciente[] = [];
@@ -54,39 +55,69 @@ export class CitasMedicas implements OnInit {
   }
 
   listarCitas(): void {
-    this.citaService.findAll().subscribe(data => {
-      this.citas = data._embedded?.citaMedicaDTOList || [];
+    this.citaService.findAll().subscribe({
+      next: (data) => {
+        this.citas = data._embedded?.citaMedicaDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar citas:', error);
+      }
     });
   }
 
   listarPacientes(): void {
-    this.pacienteService.findAll().subscribe(data => {
-      this.pacientes = data._embedded?.pacienteDTOList || [];
+    this.pacienteService.findAll().subscribe({
+      next: (data) => {
+        this.pacientes = data._embedded?.pacienteDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar pacientes:', error);
+      }
     });
   }
 
   listarDoctores(): void {
-    this.doctorService.findAll().subscribe(data => {
-      this.doctores = data._embedded?.doctorDTOList || [];
+    this.doctorService.findAll().subscribe({
+      next: (data) => {
+        this.doctores = data._embedded?.doctorDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar doctores:', error);
+      }
     });
   }
 
   listarHorarios(): void {
-    this.horarioService.findAll().subscribe(data => {
-      console.log("HORARIOS:", data);
-      this.horarios = data._embedded?.horarioDoctorDTOList || [];
-      console.log("horarios cargados:", this.horarios);
+    this.horarioService.findAll().subscribe({
+      next: (data) => {
+        this.horarios = data._embedded?.horarioDoctorDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar horarios:', error);
+      }
     });
   }
 
   listarConsultorios(): void {
-    this.consultorioService.findAll().subscribe(data => {
-      this.consultorios = data._embedded?.consultorioDTOList || [];
+    this.consultorioService.findAll().subscribe({
+      next: (data) => {
+        this.consultorios = data._embedded?.consultorioDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar consultorios:', error);
+      }
     });
   }
 
   guardar(): void {
+
     if (this.idCita === 0) {
+
       const cita = {
         fecha: this.fecha,
         hora: this.hora,
@@ -105,6 +136,7 @@ export class CitasMedicas implements OnInit {
       });
 
     } else {
+
       const cita: CitaMedica = {
         idCita: this.idCita,
         fecha: this.fecha,

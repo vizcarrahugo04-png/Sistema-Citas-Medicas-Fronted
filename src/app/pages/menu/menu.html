@@ -1,0 +1,34 @@
+<nav class="menu">
+<h3>Gestor de Citas Médicas</h3>
+
+<p>{{ correo }}</p>
+<p>Rol: {{ rol }}</p>
+
+@if (rol === 'Administrador') {
+    <a routerLink="/usuarios">Usuarios</a>
+    <a routerLink="/roles">Roles</a>
+    <a routerLink="/doctores">Doctores</a>
+    <a routerLink="/pacientes">Pacientes</a>
+    <a routerLink="/consultorios">Consultorios</a>
+    <a routerLink="/especialidades">Especialidades</a>
+    <a routerLink="/horarios-doctor">Horarios Doctor</a>
+    <a routerLink="/citas-medicas">Citas Médicas</a>
+    <a routerLink="/historial-citas">Historial Citas</a>
+}
+
+@if (rol === 'Doctor') {
+    <a routerLink="/doctores">Doctores</a>
+    <a routerLink="/pacientes">Pacientes</a>
+    <a routerLink="/horarios-doctor">Horarios Doctor</a>
+    <a routerLink="/citas-medicas">Citas Médicas</a>
+    <a routerLink="/historial-citas">Historial Citas</a>
+}
+
+@if (rol === 'Paciente') {
+    <a routerLink="/pacientes">Pacientes</a>
+    <a routerLink="/citas-medicas">Citas Médicas</a>
+    <a routerLink="/historial-citas">Historial Citas</a>
+}
+
+<button type="button" (click)="logout()">Cerrar sesión</button>
+</nav>

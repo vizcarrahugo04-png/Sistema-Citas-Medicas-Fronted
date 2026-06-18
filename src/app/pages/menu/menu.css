@@ -1,0 +1,17 @@
+.menu {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 12px;
+    background: #f1f1f1;
+    border-bottom: 1px solid #ccc;
+}
+
+.menu a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu button {
+    margin-left: auto;
+}
