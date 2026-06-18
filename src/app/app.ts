@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { HistorialCitas } from './pages/historial-citas/historial-citas';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [HistorialCitas],
+  imports: [ RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {}
+export class App {
+}

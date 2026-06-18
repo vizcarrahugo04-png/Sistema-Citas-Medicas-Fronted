@@ -34,17 +34,31 @@ export class Usuarios implements OnInit {
     this.listarRoles();
   }
 
-  listarUsuarios(): void{
-    this.usuarioService.findAll().subscribe(data =>{
+  listarUsuarios(): void {
+  this.usuarioService.findAll().subscribe({
+    next: (data) => {
+      console.log('Usuarios:', data);
+      console.log('Embedded usuario:',data._embedded);
       this.usuarios = data._embedded.usuarioDTOList;
-    });
-  }
+    },
+    error: (error) => {
+      console.log('Error al listar usuarios:', error);
+    }
+  });
+}
 
-  listarRoles():void {
-    this.rolService.findAll().subscribe(data =>{
+  listarRoles(): void {
+  this.rolService.findAll().subscribe({
+    next: (data) => {
+      console.log('Roles:', data);
+      console.log('Embedded roles:',data._embedded);
       this.roles = data._embedded.rolDTOList;
-    });
-  }
+    },
+    error: (error) => {
+      console.log('Error al listar roles:', error);
+    }
+  });
+}
 
   guardar(): void{
     if(this.idUsuario === 0) {
