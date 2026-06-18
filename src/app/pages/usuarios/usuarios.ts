@@ -5,6 +5,8 @@ import { Usuario } from "../../models/usuario";
 import { Rol } from "../../models/rol";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthService } from "../../services/auth.service";
 
 
 @Component({
@@ -18,6 +20,8 @@ import { FormsModule } from "@angular/forms";
 export class Usuarios implements OnInit {
   private usuarioService = inject(UsuarioService);
   private rolService = inject(RolService);
+  private router = inject(Router);
+  private authService = inject(AuthService)
 
   usuarios: Usuario[] =[];
   roles: Rol[] = [];
@@ -118,5 +122,10 @@ export class Usuarios implements OnInit {
     this.password = '';
     this.estado = true;
     this.idRol = 0;
+  }
+
+  logout(): void {
+  this.authService.logout();
+  this.router.navigate(['']);
   }
 }

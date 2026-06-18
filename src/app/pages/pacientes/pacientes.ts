@@ -5,6 +5,8 @@ import { PacienteService } from "../../services/paciente";
 import { UsuarioService } from "../../services/usuario";
 import { Paciente } from "../../models/paciente";
 import { Usuario } from "../../models/usuario";
+import { Router } from "@angular/router";
+import { AuthService } from "../../services/auth.service";
 
 
 @Component({
@@ -18,6 +20,8 @@ export class Pacientes implements OnInit{
 
   private pacienteService = inject(PacienteService);
   private UsuarioService = inject(UsuarioService);
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
   pacientes: Paciente[]=[];
   usuarios: Usuario[]=[];
@@ -125,5 +129,10 @@ export class Pacientes implements OnInit{
     this.sexo='';
     this.estado=true;
     this.idUsuario=0;
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['']);
   }
 }

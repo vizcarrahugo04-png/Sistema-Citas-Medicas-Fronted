@@ -7,6 +7,8 @@ import { EspecialidadService } from "../../services/especialidad";
 import { Doctor } from "../../models/doctor";
 import { Usuario } from "../../models/usuario";
 import { Especialidad } from "../../models/especialidad";
+import { Router } from "@angular/router";
+import { AuthService } from "../../services/auth.service";
 
 
 @Component({
@@ -21,6 +23,8 @@ export class Doctores implements OnInit{
   private doctorService = inject(DoctorService);
   private usuarioService = inject(UsuarioService);
   private especialidadService = inject(EspecialidadService)
+  private router = inject(Router);
+  private authService = inject(AuthService);
 
   doctores:Doctor[]=[];
   usuarios:Usuario[]=[];
@@ -130,5 +134,10 @@ export class Doctores implements OnInit{
     this.estado=true;
     this.idUsuario=0;
     this.idEspecialidad=0;
+  }
+  
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['']);
   }
 }

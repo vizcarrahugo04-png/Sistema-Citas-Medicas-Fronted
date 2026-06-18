@@ -4,6 +4,7 @@ import { Login } from './pages/login/login';
 import { Usuarios } from './pages/usuarios/usuarios';
 import { Doctores } from './pages/doctores/doctores';
 import { Pacientes } from './pages/pacientes/pacientes';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -12,14 +13,17 @@ export const routes: Routes = [
     },
     {
         path: 'usuarios',
-        component: Usuarios
+        component: Usuarios,
+        canActivate: [authGuard]
     },
     {
         path: 'doctores',
-        component: Doctores
+        component: Doctores,
+        canActivate: [authGuard]
     },
     {
         path: 'pacientes',
-        component: Pacientes
+        component: Pacientes,
+        canActivate: [authGuard]
     }
 ];
