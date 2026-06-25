@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RolService } from "../../services/rol";
@@ -12,23 +12,34 @@ import { Rol } from "../../models/rol";
   styleUrl: './roles.css'
 })
 export class Roles implements OnInit {
+
   private rolService = inject(RolService);
+  private cdr = inject(ChangeDetectorRef);
 
   roles: Rol[] = [];
 
-  idRol:number = 0;
-  nombre: string ="";
-  descripcion: string ="";
+  idRol: number = 0;
+  nombre: string = "";
+  descripcion: string = "";
 
   ngOnInit(): void {
     this.listar();
   }
-  
+
   listar(): void {
-    this.rolService.findAll().subscribe(data =>{
-      this.roles = data._embedded.rolDTOList;
-    });
-  }
+  this.rolService.findAll().subscribe({
+    next: (data) => {
+      console.log('ROLES DATA:', data);
+      console.log('EMBEDDED:', data._embedded);
+
+      this.roles = data._embedded?.rolDTOList || [];
+      this.cdr.detectChanges();
+    },
+    error: (error) => {
+      console.log('Error al listar roles:', error);
+    }
+  });
+}
 
   guardar(): void {
     const rol = {
@@ -36,34 +47,34 @@ export class Roles implements OnInit {
       descripcion: this.descripcion
     };
 
-    if(this.idRol === 0) {
-      this.rolService.save(rol as any).subscribe(() =>{
+    if (this.idRol === 0) {
+      this.rolService.save(rol as any).subscribe(() => {
         alert("Rol registrado correctamente");
         this.limpiar();
         this.listar();
       });
-    }else{
-      this.rolService.update (this.idRol,{
+    } else {
+      this.rolService.update(this.idRol, {
         idRol: this.idRol,
-        nombre:this.nombre,
-        descripcion:this.descripcion
-      }).subscribe(()=>{
+        nombre: this.nombre,
+        descripcion: this.descripcion
+      }).subscribe(() => {
         alert("Rol actualizado correctamente");
         this.limpiar();
         this.listar();
-      })
+      });
     }
   }
 
-  editar(rol:Rol): void {
+  editar(rol: Rol): void {
     this.idRol = rol.idRol;
     this.nombre = rol.nombre;
     this.descripcion = rol.descripcion;
   }
 
   eliminar(id: number): void {
-    if(confirm("¿Seguro que deseas eliminar este rol?")) {
-      this.rolService.delete(id).subscribe(()=>{
+    if (confirm("¿Seguro que deseas eliminar este rol?")) {
+      this.rolService.delete(id).subscribe(() => {
         alert("Rol eliminado correctamente");
         this.listar();
       });
@@ -72,7 +83,7 @@ export class Roles implements OnInit {
 
   limpiar(): void {
     this.idRol = 0;
-    this.nombre ="";
-    this.descripcion ="";
+    this.nombre = "";
+    this.descripcion = "";
   }
 }

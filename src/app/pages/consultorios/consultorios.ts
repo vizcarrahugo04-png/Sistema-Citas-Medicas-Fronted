@@ -1,9 +1,8 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ConsultorioService } from "../../services/consultorio";
 import { Consultorio } from "../../models/consultorio";
-
 
 @Component({
   selector:'app-consultorios',
@@ -12,51 +11,63 @@ import { Consultorio } from "../../models/consultorio";
   templateUrl:'./consultorios.html',
   styleUrl:'./consultorios.css'
 })
-export class Consultorios implements OnInit{
-  private service = inject(ConsultorioService);
-  consultorios: Consultorio[]=[];
+export class Consultorios implements OnInit {
 
-  idConsultorio:number = 0;
-  numero:string ='';
-  ubicacion:string='';
-  piso:number=1;
-  estado:boolean=true;
+  private service = inject(ConsultorioService);
+  private cdr = inject(ChangeDetectorRef);
+
+  consultorios: Consultorio[] = [];
+
+  idConsultorio: number = 0;
+  numero: string = '';
+  ubicacion: string = '';
+  piso: number = 1;
+  estado: boolean = true;
 
   ngOnInit(): void {
     this.listar();
   }
 
-  listar():void{
-    this.service.findAll().subscribe(data =>{
-      this.consultorios = data._embedded.consultorioDTOList;
+  listar(): void {
+    this.service.findAll().subscribe({
+      next: (data) => {
+        this.consultorios = data._embedded?.consultorioDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar consultorios:', error);
+      }
     });
   }
 
-  guardar():void {
-    if(this.idConsultorio === 0){
+  guardar(): void {
+
+    if (this.idConsultorio === 0) {
 
       const consultorio = {
-      numero:this.numero,
-      ubicacion:this.ubicacion,
-      piso:this.piso,
-      estado:this.estado
+        numero: this.numero,
+        ubicacion: this.ubicacion,
+        piso: this.piso,
+        estado: this.estado
       };
 
-      this.service.save(consultorio).subscribe(()=>{
+      this.service.save(consultorio).subscribe(() => {
         alert('Consultorio registrado correctamente');
         this.limpiar();
         this.listar();
       });
-    }else{
-      const consultorio:Consultorio = {
-        idConsultorio:this.idConsultorio,
-        numero:this.numero,
-        ubicacion:this.ubicacion,
-        piso:this.piso,
-        estado:this.estado
+
+    } else {
+
+      const consultorio: Consultorio = {
+        idConsultorio: this.idConsultorio,
+        numero: this.numero,
+        ubicacion: this.ubicacion,
+        piso: this.piso,
+        estado: this.estado
       };
 
-      this.service.update(this.idConsultorio,consultorio).subscribe(()=>{
+      this.service.update(this.idConsultorio, consultorio).subscribe(() => {
         alert('Consultorio actualizado correctamente');
         this.limpiar();
         this.listar();
@@ -64,28 +75,28 @@ export class Consultorios implements OnInit{
     }
   }
 
-  editar(consultorio:Consultorio):void{
-    this.idConsultorio= consultorio.idConsultorio;
-    this.numero= consultorio.numero;
-    this.ubicacion= consultorio.ubicacion;
-    this.piso= consultorio.piso;
-    this.estado=consultorio.estado;
+  editar(consultorio: Consultorio): void {
+    this.idConsultorio = consultorio.idConsultorio;
+    this.numero = consultorio.numero;
+    this.ubicacion = consultorio.ubicacion;
+    this.piso = consultorio.piso;
+    this.estado = consultorio.estado;
   }
 
-  eliminar(id:number): void{
-    if(confirm('¿Seguro que deseas eliminar este consultorio?')){
-      this.service.delete(id).subscribe(()=>{
+  eliminar(id: number): void {
+    if (confirm('¿Seguro que deseas eliminar este consultorio?')) {
+      this.service.delete(id).subscribe(() => {
         alert('Consultorio eliminado correctamente');
         this.listar();
       });
     }
   }
 
-  limpiar(): void{
-    this.idConsultorio=0;
-    this.numero='';
-    this.ubicacion='';
-    this.piso=1;
-    this.estado=true;
+  limpiar(): void {
+    this.idConsultorio = 0;
+    this.numero = '';
+    this.ubicacion = '';
+    this.piso = 1;
+    this.estado = true;
   }
 }

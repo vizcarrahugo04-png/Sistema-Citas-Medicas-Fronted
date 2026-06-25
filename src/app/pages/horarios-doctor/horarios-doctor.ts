@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -19,6 +19,7 @@ export class HorariosDoctor implements OnInit {
 
   private horarioService = inject(HorarioDoctorService);
   private doctorService = inject(DoctorService);
+  private cdr = inject(ChangeDetectorRef);
 
   horarios: HorarioDoctor[] = [];
   doctores: Doctor[] = [];
@@ -37,21 +38,32 @@ export class HorariosDoctor implements OnInit {
   }
 
   listarHorarios(): void {
-  this.horarioService.findAll().subscribe(data => {
-    console.log("HORARIOS:", data);
-    this.horarios = data._embedded?.horarioDoctorDTOList || [];
-    console.log("horarios cargados:", this.horarios);
-  });
-}
+    this.horarioService.findAll().subscribe({
+      next: (data) => {
+        this.horarios = data._embedded?.horarioDoctorDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar horarios:', error);
+      }
+    });
+  }
 
   listarDoctores(): void {
-    this.doctorService.findAll().subscribe(data => {
-      this.doctores = data._embedded.doctorDTOList;
+    this.doctorService.findAll().subscribe({
+      next: (data) => {
+        this.doctores = data._embedded?.doctorDTOList || [];
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.log('Error al listar doctores:', error);
+      }
     });
   }
 
   guardar(): void {
     if (this.idHorario === 0) {
+
       const horario = {
         dia: this.dia,
         horaInicio: this.horaInicio,
@@ -68,6 +80,7 @@ export class HorariosDoctor implements OnInit {
       });
 
     } else {
+
       const horario: HorarioDoctor = {
         idHorario: this.idHorario,
         dia: this.dia,
