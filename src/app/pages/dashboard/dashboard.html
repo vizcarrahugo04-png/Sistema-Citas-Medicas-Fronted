@@ -1,0 +1,115 @@
+<div class="mb-4">
+    <h1 class="fw-bold mb-1">Dashboard</h1>
+    <p class="text-muted mb-0">
+        Bienvenido al sistema de gestión de citas médicas
+    </p>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-3">
+        <a routerLink="/usuarios" class="dashboard-link">
+            <div class="card shadow-sm border-0 dashboard-card">
+                <div class="card-body">
+                    <div class="icon-box bg-primary">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <h5 class="mt-3">Usuarios</h5>
+                    <p class="text-muted mb-0">Gestión de usuarios</p>
+
+                    <div class="mt-3 text-primary fw-bold">
+                        Ir al módulo <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a routerLink="/pacientes" class="dashboard-link">
+            <div class="card shadow-sm border-0 dashboard-card">
+                <div class="card-body">
+                    <div class="icon-box bg-success">
+                        <i class="bi bi-person-heart"></i>
+                    </div>
+
+                    <h5 class="mt-3">Pacientes</h5>
+                    <p class="text-muted mb-0">Gestión de pacientes</p>
+
+                    <div class="mt-3 text-success fw-bold">
+                        Ir al módulo <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a routerLink="/doctores" class="dashboard-link">
+            <div class="card shadow-sm border-0 dashboard-card">
+                <div class="card-body">
+                    <div class="icon-box bg-warning">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+
+                    <h5 class="mt-3">Doctores</h5>
+                    <p class="text-muted mb-0">Gestión médica</p>
+
+                    <div class="mt-3 text-warning fw-bold">
+                        Ir al módulo <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a routerLink="/citas-medicas" class="dashboard-link">
+            <div class="card shadow-sm border-0 dashboard-card">
+                <div class="card-body">
+                    <div class="icon-box bg-danger">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+
+                    <h5 class="mt-3">Citas Médicas</h5>
+                    <p class="text-muted mb-0">Control de citas</p>
+
+                    <div class="mt-3 text-danger fw-bold">
+                        Ir al módulo <i class="bi bi-arrow-right"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+
+    <div class="card-header bg-white">
+        <h5 class="mb-0">
+            <i class="bi bi-person-circle me-2"></i>
+            Sesión actual
+        </h5>
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <strong>Correo</strong>
+                <p class="text-muted mb-0">{{ correo }}</p>
+            </div>
+
+            <div class="col-md-6">
+                <strong>Rol</strong>
+                <p class="text-muted mb-0">{{ rol }}</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

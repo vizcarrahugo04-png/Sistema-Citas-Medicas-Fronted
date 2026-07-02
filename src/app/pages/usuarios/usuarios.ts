@@ -34,6 +34,7 @@ export class Usuarios implements OnInit {
   password: string = '';
   estado: boolean = true;
   idRol: number = 0;
+  filtro: string = '';
 
   ngOnInit(): void {
     this.listarUsuarios();
@@ -105,6 +106,15 @@ export class Usuarios implements OnInit {
     this.password = usuario.password;
     this.estado = usuario.estado;
     this.idRol = usuario.idRol;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      document.getElementById('topUsuarios')?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 100);
   }
 
   eliminar(id: number): void {
@@ -114,6 +124,13 @@ export class Usuarios implements OnInit {
         this.listarUsuarios();
       });
     }
+  }
+
+  usuariosFiltrados(): Usuario[] {
+    return this.usuarios.filter(usuario =>
+      usuario.username.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      usuario.correo.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar(): void {

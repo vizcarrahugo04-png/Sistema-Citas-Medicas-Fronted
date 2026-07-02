@@ -1,17 +1,117 @@
-.menu {
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(180deg, #0d6efd, #084298);
+    color: white;
     display: flex;
-    gap: 15px;
+    flex-direction: column;
+    padding: 22px 18px;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    display: flex;
     align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+}
+
+.sidebar-header h4 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.sidebar-header small {
+    opacity: 0.8;
+}
+
+.user-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.14);
     padding: 12px;
-    background: #f1f1f1;
-    border-bottom: 1px solid #ccc;
+    border-radius: 14px;
+    margin-bottom: 10px;
 }
 
-.menu a {
+.user-box i {
+    font-size: 28px;
+}
+
+.user-box div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.user-box span {
+    font-size: 12px;
+    opacity: 0.85;
+    word-break: break-word;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-nav a {
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
-    font-weight: bold;
+    padding: 11px 12px;
+    border-radius: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s ease;
 }
 
-.menu button {
-    margin-left: auto;
+.sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
+    transform: translateX(4px);
+}
+
+.sidebar-nav i {
+    font-size: 17px;
+}
+
+.logout-btn {
+    margin-top: auto;
+    border: none;
+    background: white;
+    color: #0d6efd;
+    padding: 7px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+
+.logout-btn:hover {
+    background: #f1f5ff;
+}
+
+.active-link {
+    background: rgba(255,255,255,0.25);
+    color: #fff !important;
+    border-left: 4px solid #fff;
+    font-weight: 600;
 }

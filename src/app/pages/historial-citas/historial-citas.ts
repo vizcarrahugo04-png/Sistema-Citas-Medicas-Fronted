@@ -30,6 +30,7 @@ export class HistorialCitas implements OnInit {
   estadoNuevo: string = '';
   observacion: string = '';
   idCita: number = 0;
+  filtro: string = '';
 
   ngOnInit(): void {
     this.listarHistoriales();
@@ -111,6 +112,14 @@ export class HistorialCitas implements OnInit {
         this.listarHistoriales();
       });
     }
+  }
+
+  historialesFiltrados(): HistorialCita[] {
+  return this.historiales.filter(historial =>
+    historial.estadoAnterior.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    historial.estadoNuevo.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    historial.observacion.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar(): void {

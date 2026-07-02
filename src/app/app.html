@@ -1,5 +1,11 @@
-@if (haySesion()) {
-  <app-menu></app-menu>
-}
+@if (haySesion() && !esLogin()) {
+    <div class="app-layout">
+    <app-menu></app-menu>
 
-<router-outlet></router-outlet>
+    <main class="app-content">
+        <router-outlet></router-outlet>
+    </main>
+    </div>
+}@else {
+    <router-outlet></router-outlet>
+}

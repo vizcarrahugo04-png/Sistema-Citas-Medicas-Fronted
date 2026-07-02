@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { Menu } from './pages/menu/menu';
 
 @Component({
@@ -10,7 +10,13 @@ import { Menu } from './pages/menu/menu';
 })
 export class App {
 
+  private router = inject(Router);
+
   haySesion(): boolean {
     return localStorage.getItem('token') !== null;
+  }
+
+  esLogin(): boolean {
+    return this.router.url === '/';
   }
 }

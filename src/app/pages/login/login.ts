@@ -21,6 +21,7 @@ export class Login {
   };
 
   mensaje = '';
+  mostrarPassword = false;
 
   login() {
     this.authService.login(this.loginData).subscribe({
@@ -29,16 +30,7 @@ export class Login {
         localStorage.setItem('correo', response.correo);
         localStorage.setItem('rol', response.rol);
 
-        this.mensaje = 'Login correcto';
-        console.log(response);
-
-        if (response.rol === 'Administrador') {
-        this.router.navigate(['/usuarios']);
-        } else if (response.rol === 'Doctor') {
-        this.router.navigate(['/doctores']);
-        } else if (response.rol === 'Paciente') {
-        this.router.navigate(['/pacientes']);
-        }
+        this.router.navigate(['/dashboard']);
       },
       error: () => {
         this.mensaje = 'Correo o contraseña incorrectos';

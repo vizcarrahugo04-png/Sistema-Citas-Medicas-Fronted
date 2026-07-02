@@ -37,6 +37,7 @@ export class Pacientes implements OnInit{
   sexo:string='';
   estado:boolean=true;
   idUsuario:number=0;
+  filtro: string = '';
   
   ngOnInit(): void {
   this.listarPacientes();
@@ -129,6 +130,14 @@ export class Pacientes implements OnInit{
         this.listarPacientes();
       })
     }
+  }
+
+  pacientesFiltrados(): Paciente[] {
+  return this.pacientes.filter(paciente =>
+    paciente.nombres.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    paciente.apellidos.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    paciente.dni.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar():void{

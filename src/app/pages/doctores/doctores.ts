@@ -41,6 +41,7 @@ export class Doctores implements OnInit {
   estado: boolean = true;
   idUsuario: number = 0;
   idEspecialidad: number = 0;
+  filtro: string = '';
 
   ngOnInit(): void {
     this.listarUsuarios();
@@ -134,6 +135,15 @@ export class Doctores implements OnInit {
     this.estado = doctor.estado;
     this.idUsuario = doctor.idUsuario;
     this.idEspecialidad = doctor.idEspecialidad;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      document.querySelector('.app-content')?.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    }, 100);
   }
 
   eliminar(id: number): void {
@@ -143,6 +153,13 @@ export class Doctores implements OnInit {
         this.listarDoctores();
       });
     }
+  }
+  doctoresFiltrados(): Doctor[] {
+  return this.doctores.filter(doctor =>
+    doctor.nombres.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    doctor.apellidos.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    doctor.correoProfesional.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar(): void {

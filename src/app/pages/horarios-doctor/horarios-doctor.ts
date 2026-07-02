@@ -31,6 +31,7 @@ export class HorariosDoctor implements OnInit {
   cuposDisponibles: number = 1;
   estado: boolean = true;
   idDoctor: number = 0;
+  filtro: string = '';
 
   ngOnInit(): void {
     this.listarHorarios();
@@ -116,6 +117,12 @@ export class HorariosDoctor implements OnInit {
         this.listarHorarios();
       });
     }
+  }
+
+  horariosFiltrados(): HorarioDoctor[] {
+  return this.horarios.filter(horario =>
+    horario.dia.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar(): void {

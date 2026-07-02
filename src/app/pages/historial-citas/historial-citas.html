@@ -1,105 +1,177 @@
-<h1>Gestión de Historial de Citas</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="fw-bold mb-1">Gestión de Historial de Citas</h1>
+        <p class="text-muted mb-0">
+            Administra los cambios realizados en las citas médicas
+        </p>
+    </div>
+</div>
 
-<h2>
-  {{ idHistorial === 0 ? 'Nuevo Historial' : 'Editar Historial' }}
-</h2>
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            {{ idHistorial === 0 ? 'Nuevo Historial' : 'Editar Historial' }}
+        </h5>
+    </div>
 
-<input
-  type="datetime-local"
-  name="fechaCambio"
-  [(ngModel)]="fechaCambio">
+    <div class="card-body">
+        <form>
+            <div class="row g-3">
 
-<input
-  type="text"
-  placeholder="Estado anterior"
-  name="estadoAnterior"
-  [(ngModel)]="estadoAnterior">
+                <div class="col-md-4">
+                    <label class="form-label">Fecha de cambio</label>
+                    <input
+                        class="form-control"
+                        type="datetime-local"
+                        name="fechaCambio"
+                        [(ngModel)]="fechaCambio">
+                </div>
 
-<input
-  type="text"
-  placeholder="Estado nuevo"
-  name="estadoNuevo"
-  [(ngModel)]="estadoNuevo">
+                <div class="col-md-4">
+                    <label class="form-label">Estado anterior</label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        name="estadoAnterior"
+                        [(ngModel)]="estadoAnterior">
+                </div>
 
-<input
-  type="text"
-  placeholder="Observación"
-  name="observacion"
-  [(ngModel)]="observacion">
+                <div class="col-md-4">
+                    <label class="form-label">Estado nuevo</label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        name="estadoNuevo"
+                        [(ngModel)]="estadoNuevo">
+                </div>
 
-<label>Cita:</label>
+                <div class="col-md-8">
+                    <label class="form-label">Observación</label>
+                    <input
+                        class="form-control"
+                        type="text"
+                        name="observacion"
+                        [(ngModel)]="observacion">
+                </div>
 
-<select
-  name="idCita"
-  [(ngModel)]="idCita">
+                <div class="col-md-4">
+                    <label class="form-label">Cita</label>
+                    <select
+                        class="form-select"
+                        name="idCita"
+                        [(ngModel)]="idCita">
 
-  <option [ngValue]="0">
-    Seleccione cita
-  </option>
+                        <option [ngValue]="0">Seleccione cita</option>
 
-  <option
-    *ngFor="let cita of citas"
-    [ngValue]="cita.idCita">
+                        <option
+                            *ngFor="let cita of citas"
+                            [ngValue]="cita.idCita">
+                            Cita #{{ cita.idCita }}
+                        </option>
 
-    Cita #{{ cita.idCita }}
+                    </select>
+                </div>
 
-  </option>
+            </div>
 
-</select>
+            <div class="mt-4">
+                <button class="btn btn-primary me-2" type="button" (click)="guardar()">
+                    <i class="bi bi-check-circle"></i>
+                    {{ idHistorial === 0 ? 'Guardar' : 'Actualizar' }}
+                </button>
 
-<button type="button" (click)="guardar()">
-  {{ idHistorial === 0 ? 'Guardar' : 'Actualizar' }}
-</button>
+                <button class="btn btn-secondary" type="button" (click)="limpiar()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Limpiar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-<button type="button" (click)="limpiar()">
-  Limpiar
-</button>
+<div class="card shadow-sm">
+    <div class="card-header bg-white">
+        <h5 class="mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            Lista de Historiales
+        </h5>
+    </div>
 
-<hr>
+    <div class="card-body">
 
-<table border="1">
+        <div class="row align-items-center mb-3">
+            <div class="col-md-6">
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text bg-primary text-white">
+                        <i class="bi bi-search"></i>
+                    </span>
 
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Fecha</th>
-      <th>Estado Anterior</th>
-      <th>Estado Nuevo</th>
-      <th>Observación</th>
-      <th>ID Cita</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Buscar por estado u observación..."
+                        [(ngModel)]="filtro"
+                        name="filtro">
+                </div>
+            </div>
 
-  <tbody>
+            <div class="col-md-6 text-end">
+                <span class="badge bg-primary fs-6">
+                    Total: {{ historialesFiltrados().length }}
+                </span>
+            </div>
+        </div>
 
-    <tr *ngFor="let historial of historiales">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-primary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Estado Anterior</th>
+                        <th>Estado Nuevo</th>
+                        <th>Observación</th>
+                        <th>ID Cita</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
 
-      <td>{{ historial.idHistorial }}</td>
-      <td>{{ historial.fechaCambio }}</td>
-      <td>{{ historial.estadoAnterior }}</td>
-      <td>{{ historial.estadoNuevo }}</td>
-      <td>{{ historial.observacion }}</td>
-      <td>{{ historial.idCita }}</td>
+                <tbody>
+                    <tr *ngFor="let historial of historialesFiltrados()">
+                        <td>{{ historial.idHistorial }}</td>
+                        <td>{{ historial.fechaCambio }}</td>
 
-      <td>
+                        <td>
+                            <span class="badge bg-secondary">
+                                {{ historial.estadoAnterior }}
+                            </span>
+                        </td>
 
-        <button
-          type="button"
-          (click)="editar(historial)">
-          Editar
-        </button>
+                        <td>
+                            <span class="badge bg-primary">
+                                {{ historial.estadoNuevo }}
+                            </span>
+                        </td>
 
-        <button
-          type="button"
-          (click)="eliminar(historial.idHistorial)">
-          Eliminar
-        </button>
+                        <td>{{ historial.observacion }}</td>
+                        <td>{{ historial.idCita }}</td>
 
-      </td>
+                        <td class="text-center">
+                            <button class="btn btn-warning btn-sm me-2" type="button" (click)="editar(historial)">
+                                <i class="bi bi-pencil-square"></i>
+                                Editar
+                            </button>
 
-    </tr>
+                            <button class="btn btn-danger btn-sm" type="button" (click)="eliminar(historial.idHistorial)">
+                                <i class="bi bi-trash-fill"></i>
+                                Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
 
-  </tbody>
+            </table>
+        </div>
 
-</table>
+    </div>
+</div>

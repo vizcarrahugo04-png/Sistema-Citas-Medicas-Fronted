@@ -1,34 +1,138 @@
-<nav class="menu">
-<h3>Gestor de Citas Médicas</h3>
+<aside class="sidebar">
 
-<p>{{ correo }}</p>
-<p>Rol: {{ rol }}</p>
+    <div class="sidebar-header">
+        <div class="brand-icon">
+            <i class="bi bi-hospital-fill"></i>
+        </div>
 
-@if (rol === 'Administrador') {
-    <a routerLink="/usuarios">Usuarios</a>
-    <a routerLink="/roles">Roles</a>
-    <a routerLink="/doctores">Doctores</a>
-    <a routerLink="/pacientes">Pacientes</a>
-    <a routerLink="/consultorios">Consultorios</a>
-    <a routerLink="/especialidades">Especialidades</a>
-    <a routerLink="/horarios-doctor">Horarios Doctor</a>
-    <a routerLink="/citas-medicas">Citas Médicas</a>
-    <a routerLink="/historial-citas">Historial Citas</a>
-}
+        <div>
+            <h4>Gestor Citas</h4>
+            <small>Sistema Médico</small>
+        </div>
+    </div>
 
-@if (rol === 'Doctor') {
-    <a routerLink="/doctores">Doctores</a>
-    <a routerLink="/pacientes">Pacientes</a>
-    <a routerLink="/horarios-doctor">Horarios Doctor</a>
-    <a routerLink="/citas-medicas">Citas Médicas</a>
-    <a routerLink="/historial-citas">Historial Citas</a>
-}
+    <div class="user-box">
+        <i class="bi bi-person-circle"></i>
+        <div>
+            <strong>{{ rol }}</strong>
+            <span>{{ correo }}</span>
+        </div>
+    </div>
 
-@if (rol === 'Paciente') {
-    <a routerLink="/pacientes">Pacientes</a>
-    <a routerLink="/citas-medicas">Citas Médicas</a>
-    <a routerLink="/historial-citas">Historial Citas</a>
-}
+    <nav class="sidebar-nav">
 
-<button type="button" (click)="logout()">Cerrar sesión</button>
-</nav>
+        @if (rol === 'Administrador') {
+
+            <a routerLink="/dashboard" routerLinkActive="active-link">
+                <i class="bi bi-house-fill"></i>
+                Dashboard
+            </a>
+
+            <a routerLink="/usuarios" routerLinkActive="active-link">
+                <i class="bi bi-people-fill"></i>
+                Usuarios
+            </a>
+
+            <a routerLink="/doctores" routerLinkActive="active-link">
+                <i class="bi bi-person-badge-fill"></i>
+                Doctores
+            </a>
+
+            <a routerLink="/pacientes" routerLinkActive="active-link">
+                <i class="bi bi-person-heart"></i>
+                Pacientes
+            </a>
+
+            <a routerLink="/consultorios" routerLinkActive="active-link">
+                <i class="bi bi-building-fill"></i>
+                Consultorios
+            </a>
+
+            <a routerLink="/especialidades" routerLinkActive="active-link">
+                <i class="bi bi-clipboard2-pulse-fill"></i>
+                Especialidades
+            </a>
+
+            <a routerLink="/horarios-doctor" routerLinkActive="active-link">
+                <i class="bi bi-clock-fill"></i>
+                Horarios
+            </a>
+
+            <a routerLink="/citas-medicas" routerLinkActive="active-link">
+                <i class="bi bi-calendar-check-fill"></i>
+                Citas
+            </a>
+
+            <a routerLink="/historial-citas" routerLinkActive="active-link">
+                <i class="bi bi-file-earmark-medical-fill"></i>
+                Historial
+            </a>
+
+        }
+
+        @if (rol === 'Doctor') {
+
+            <a routerLink="/dashboard" routerLinkActive="active-link">
+                <i class="bi bi-house-fill"></i>
+                Dashboard
+            </a>
+
+            <a routerLink="/doctores" routerLinkActive="active-link">
+                <i class="bi bi-person-badge-fill"></i>
+                Doctores
+            </a>
+
+            <a routerLink="/pacientes" routerLinkActive="active-link">
+                <i class="bi bi-person-heart"></i>
+                Pacientes
+            </a>
+
+            <a routerLink="/horarios-doctor" routerLinkActive="active-link">
+                <i class="bi bi-clock-fill"></i>
+                Horarios
+            </a>
+
+            <a routerLink="/citas-medicas" routerLinkActive="active-link">
+                <i class="bi bi-calendar-check-fill"></i>
+                Citas
+            </a>
+
+            <a routerLink="/historial-citas" routerLinkActive="active-link">
+                <i class="bi bi-file-earmark-medical-fill"></i>
+                Historial
+            </a>
+
+        }
+
+        @if (rol === 'Paciente') {
+
+            <a routerLink="/dashboard" routerLinkActive="active-link">
+                <i class="bi bi-house-fill"></i>
+                Dashboard
+            </a>
+
+            <a routerLink="/pacientes" routerLinkActive="active-link">
+                <i class="bi bi-person-heart"></i>
+                Pacientes
+            </a>
+
+            <a routerLink="/citas-medicas" routerLinkActive="active-link">
+                <i class="bi bi-calendar-check-fill"></i>
+                Citas
+            </a>
+
+            <a routerLink="/historial-citas" routerLinkActive="active-link">
+                <i class="bi bi-file-earmark-medical-fill"></i>
+                Historial
+            </a>
+
+        }
+
+    </nav>
+
+    <button class="logout-btn" type="button" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+        Cerrar sesión
+    </button>
+
+</aside>

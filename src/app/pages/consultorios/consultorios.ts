@@ -23,6 +23,7 @@ export class Consultorios implements OnInit {
   ubicacion: string = '';
   piso: number = 1;
   estado: boolean = true;
+  filtro: string = '';
 
   ngOnInit(): void {
     this.listar();
@@ -90,6 +91,13 @@ export class Consultorios implements OnInit {
         this.listar();
       });
     }
+  }
+
+  consultoriosFiltrados(): Consultorio[] {
+  return this.consultorios.filter(consultorio =>
+    consultorio.numero.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    consultorio.ubicacion.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar(): void {

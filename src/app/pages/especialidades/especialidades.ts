@@ -22,6 +22,7 @@ export class Especialidades implements OnInit {
   nombre: string = '';
   descripcion: string = '';
   estado: boolean = true;
+  filtro: string = '';
 
   ngOnInit(): void {
     this.listar();
@@ -86,6 +87,13 @@ export class Especialidades implements OnInit {
         this.listar();
       });
     }
+  }
+
+  especialidadesFiltradas(): Especialidad[] {
+  return this.especialidades.filter(especialidad =>
+    especialidad.nombre.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    especialidad.descripcion.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar(): void {

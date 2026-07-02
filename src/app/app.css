@@ -1,0 +1,14 @@
+.app-layout {
+    display: flex;
+    height: 100vh;
+    background-color: #f5f6fa;
+    overflow: hidden;
+}
+
+.app-content {
+    flex: 1;
+    height: 100vh;
+    padding: 24px;
+    overflow-y: auto;
+    overflow-x: auto;
+}

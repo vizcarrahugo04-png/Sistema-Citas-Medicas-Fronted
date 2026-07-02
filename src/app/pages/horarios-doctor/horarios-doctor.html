@@ -1,85 +1,268 @@
-<h1>Gestión de Horarios Doctor</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="fw-bold mb-1">Gestión de Horarios</h1>
+        <p class="text-muted mb-0">
+            Administra los horarios de atención de los doctores
+        </p>
+    </div>
+</div>
 
-<h2>{{ idHorario === 0 ? 'Nuevo Horario' : 'Editar Horario' }}</h2>
+<div class="card shadow-sm mb-4">
 
-<form>
-    <label>
-    Día:
-        <select name="dia" [(ngModel)]="dia">
-            <option value="">Seleccione día</option>
-            <option value="Lunes">Lunes</option>
-            <option value="Martes">Martes</option>
-            <option value="Miércoles">Miércoles</option>
-            <option value="Jueves">Jueves</option>
-            <option value="Viernes">Viernes</option>
-            <option value="Sábado">Sábado</option>
-            <option value="Domingo">Domingo</option>
-        </select>
-    </label>
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+            {{ idHorario === 0 ? 'Nuevo Horario' : 'Editar Horario' }}
+        </h5>
+    </div>
 
-    <input type="time" name="horaInicio" [(ngModel)]="horaInicio">
-    <input type="time" name="horaFin" [(ngModel)]="horaFin">
+    <div class="card-body">
 
-    <input
-    type="number"
-    placeholder="Cupos disponibles"
-    name="cuposDisponibles"
-    [(ngModel)]="cuposDisponibles">
+        <form>
 
-    <label>
-    Estado:
-    <select name="estado" [(ngModel)]="estado">
-        <option [ngValue]="true">Activo</option>
-        <option [ngValue]="false">Inactivo</option>
-    </select>
-    </label>
+            <div class="row g-3">
 
-    <label>
-    Doctor:
-        <select name="idDoctor" [(ngModel)]="idDoctor">
-            <option [ngValue]="0">Seleccione doctor</option>
-            <option *ngFor="let doctor of doctores" [ngValue]="doctor.idDoctor">
-        {{ doctor.nombres }} {{ doctor.apellidos }}
-            </option>
-        </select>
-    </label>
+                <div class="col-md-3">
+                    <label class="form-label">Día</label>
 
-    <button type="button" (click)="guardar()">
-    {{ idHorario === 0 ? 'Guardar' : 'Actualizar' }}
-    </button>
+                    <select class="form-select" name="dia" [(ngModel)]="dia">
+                        <option value="">Seleccione día</option>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miércoles">Miércoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                        <option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
+                    </select>
 
-    <button type="button" (click)="limpiar()">Limpiar</button>
-</form>
+                </div>
 
-<hr>
+                <div class="col-md-2">
+                    <label class="form-label">Hora Inicio</label>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Día</th>
-            <th>Inicio</th>
-            <th>Fin</th>
-            <th>Cupos</th>
-            <th>Estado</th>
-            <th>ID Doctor</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    
-    <tbody>
-        <tr *ngFor="let horario of horarios">
-            <td>{{ horario.idHorario }}</td>
-            <td>{{ horario.dia }}</td>
-            <td>{{ horario.horaInicio }}</td>
-            <td>{{ horario.horaFin }}</td>
-            <td>{{ horario.cuposDisponibles }}</td>
-            <td>{{ horario.estado ? 'Activo' : 'Inactivo' }}</td>
-            <td>{{ horario.idDoctor }}</td>
-        <td>
-        <button type="button" (click)="editar(horario)">Editar</button>
-        <button type="button" (click)="eliminar(horario.idHorario)">Eliminar</button>
-        </td>
-    </tr>
-    </tbody>
-</table>
+                    <input
+                        class="form-control"
+                        type="time"
+                        name="horaInicio"
+                        [(ngModel)]="horaInicio">
+
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Hora Fin</label>
+
+                    <input
+                        class="form-control"
+                        type="time"
+                        name="horaFin"
+                        [(ngModel)]="horaFin">
+
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Cupos</label>
+
+                    <input
+                        class="form-control"
+                        type="number"
+                        name="cuposDisponibles"
+                        [(ngModel)]="cuposDisponibles">
+
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Estado</label>
+
+                    <select
+                        class="form-select"
+                        name="estado"
+                        [(ngModel)]="estado">
+
+                        <option [ngValue]="true">Activo</option>
+                        <option [ngValue]="false">Inactivo</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <label class="form-label">Doctor</label>
+
+                    <select
+                        class="form-select"
+                        name="idDoctor"
+                        [(ngModel)]="idDoctor">
+
+                        <option [ngValue]="0">
+                            Seleccione doctor
+                        </option>
+
+                        <option
+                            *ngFor="let doctor of doctores"
+                            [ngValue]="doctor.idDoctor">
+
+                            {{ doctor.nombres }} {{ doctor.apellidos }}
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="mt-4">
+
+                <button
+                    class="btn btn-primary me-2"
+                    type="button"
+                    (click)="guardar()">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    {{ idHorario === 0 ? 'Guardar' : 'Actualizar' }}
+
+                </button>
+
+                <button
+                    class="btn btn-secondary"
+                    type="button"
+                    (click)="limpiar()">
+
+                    <i class="bi bi-arrow-clockwise"></i>
+
+                    Limpiar
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="card shadow-sm">
+
+    <div class="card-header bg-white">
+
+        <h5 class="mb-0">
+            <i class="bi bi-list-ul me-2"></i>
+            Lista de Horarios
+        </h5>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row align-items-center mb-3">
+
+            <div class="col-md-6">
+
+                <div class="input-group shadow-sm">
+
+                    <span class="input-group-text bg-primary text-white">
+                        <i class="bi bi-search"></i>
+                    </span>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Buscar por día..."
+                        [(ngModel)]="filtro"
+                        name="filtro">
+
+                </div>
+
+            </div>
+
+            <div class="col-md-6 text-end">
+
+                <span class="badge bg-primary fs-6">
+                    Total: {{ horariosFiltrados().length }}
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-striped table-hover align-middle">
+
+                <thead class="table-primary">
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Día</th>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Cupos</th>
+                        <th>Estado</th>
+                        <th>ID Doctor</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr *ngFor="let horario of horariosFiltrados()">
+
+                        <td>{{ horario.idHorario }}</td>
+                        <td>{{ horario.dia }}</td>
+                        <td>{{ horario.horaInicio }}</td>
+                        <td>{{ horario.horaFin }}</td>
+                        <td>{{ horario.cuposDisponibles }}</td>
+
+                        <td>
+
+                            <span
+                                class="badge"
+                                [ngClass]="horario.estado ? 'bg-success' : 'bg-danger'">
+
+                                {{ horario.estado ? 'Activo' : 'Inactivo' }}
+
+                            </span>
+
+                        </td>
+
+                        <td>{{ horario.idDoctor }}</td>
+
+                        <td class="text-center">
+
+                            <button
+                                class="btn btn-warning btn-sm me-2"
+                                type="button"
+                                (click)="editar(horario)">
+
+                                <i class="bi bi-pencil-square"></i>
+                                Editar
+
+                            </button>
+
+                            <button
+                                class="btn btn-danger btn-sm"
+                                type="button"
+                                (click)="eliminar(horario.idHorario)">
+
+                                <i class="bi bi-trash-fill"></i>
+                                Eliminar
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

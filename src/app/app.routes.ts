@@ -11,11 +11,17 @@ import { Consultorios } from './pages/consultorios/consultorios';
 import { Especialidades } from './pages/especialidades/especialidades';
 import { HorariosDoctor } from './pages/horarios-doctor/horarios-doctor';
 import { HistorialCitas } from './pages/historial-citas/historial-citas';
+import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
     {
         path: '',
         component: Login
+    },
+    {
+        path: 'dashboard',
+        component: Dashboard,
+        canActivate: [authGuard]
     },
     {
         path: 'usuarios',

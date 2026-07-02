@@ -45,6 +45,7 @@ export class CitasMedicas implements OnInit {
   idDoctor: number = 0;
   idHorario: number = 0;
   idConsultorio: number = 0;
+  filtro: string = '';
 
   ngOnInit(): void {
     this.listarCitas();
@@ -176,6 +177,14 @@ export class CitasMedicas implements OnInit {
         this.listarCitas();
       });
     }
+  }
+
+  citasFiltradas(): CitaMedica[] {
+  return this.citas.filter(cita =>
+    cita.fecha.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    cita.motivo.toLowerCase().includes(this.filtro.toLowerCase()) ||
+    cita.estado.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 
   limpiar(): void {
