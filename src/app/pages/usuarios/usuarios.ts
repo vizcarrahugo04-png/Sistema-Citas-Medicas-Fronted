@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
+import Swal from 'sweetalert2';
 
 import { UsuarioService } from "../../services/usuario";
 import { RolService } from "../../services/rol";
@@ -28,13 +29,13 @@ export class Usuarios implements OnInit {
   usuarios: Usuario[] = [];
   roles: Rol[] = [];
 
-  idUsuario: number = 0;
-  username: string = '';
-  correo: string = '';
-  password: string = '';
-  estado: boolean = true;
-  idRol: number = 0;
-  filtro: string = '';
+  idUsuario = 0;
+  username = '';
+  correo = '';
+  password = '';
+  estado = true;
+  idRol = 0;
+  filtro = '';
 
   ngOnInit(): void {
     this.listarUsuarios();
@@ -47,8 +48,8 @@ export class Usuarios implements OnInit {
         this.usuarios = data._embedded?.usuarioDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar usuarios:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los usuarios', 'error');
       }
     });
   }
@@ -59,8 +60,8 @@ export class Usuarios implements OnInit {
         this.roles = data._embedded?.rolDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar roles:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los roles', 'error');
       }
     });
   }
@@ -75,10 +76,15 @@ export class Usuarios implements OnInit {
         idRol: this.idRol
       };
 
-      this.usuarioService.save(usuario).subscribe(() => {
-        alert('Usuario registrado correctamente');
-        this.limpiar();
-        this.listarUsuarios();
+      this.usuarioService.save(usuario).subscribe({
+        next: () => {
+          Swal.fire('¡Correcto!', 'Usuario registrado correctamente', 'success');
+          this.limpiar();
+          this.listarUsuarios();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar el usuario', 'error');
+        }
       });
 
     } else {
@@ -91,10 +97,15 @@ export class Usuarios implements OnInit {
         idRol: this.idRol
       };
 
-      this.usuarioService.update(this.idUsuario, usuario).subscribe(() => {
-        alert('Usuario actualizado correctamente');
-        this.limpiar();
-        this.listarUsuarios();
+      this.usuarioService.update(this.idUsuario, usuario).subscribe({
+        next: () => {
+          Swal.fire('¡Actualizado!', 'Usuario actualizado correctamente', 'success');
+          this.limpiar();
+          this.listarUsuarios();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar el usuario', 'error');
+        }
       });
     }
   }
@@ -118,12 +129,32 @@ export class Usuarios implements OnInit {
   }
 
   eliminar(id: number): void {
-    if (confirm('¿Seguro que deseas eliminar este usuario?')) {
-      this.usuarioService.delete(id).subscribe(() => {
-        alert('Usuario eliminado correctamente');
-        this.listarUsuarios();
-      });
-    }
+    Swal.fire({
+      title: '¿Eliminar usuario?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.usuarioService.delete(id).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'Usuario eliminado correctamente', 'success');
+            this.listarUsuarios();
+          },
+          error: () => {
+            Swal.fire(
+              'No se puede eliminar',
+              'Este usuario está relacionado con un doctor o paciente.',
+              'error'
+            );
+          }
+        });
+      }
+    });
   }
 
   usuariosFiltrados(): Usuario[] {

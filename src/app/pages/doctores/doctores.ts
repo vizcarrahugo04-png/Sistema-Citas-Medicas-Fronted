@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
+import Swal from "sweetalert2";
 
 import { DoctorService } from "../../services/doctor";
 import { UsuarioService } from "../../services/usuario";
@@ -32,16 +33,16 @@ export class Doctores implements OnInit {
   usuarios: Usuario[] = [];
   especialidades: Especialidad[] = [];
 
-  idDoctor: number = 0;
-  nombres: string = '';
-  apellidos: string = '';
-  cmp: string = '';
-  telefono: string = '';
-  correoProfesional: string = '';
-  estado: boolean = true;
-  idUsuario: number = 0;
-  idEspecialidad: number = 0;
-  filtro: string = '';
+  idDoctor = 0;
+  nombres = '';
+  apellidos = '';
+  cmp = '';
+  telefono = '';
+  correoProfesional = '';
+  estado = true;
+  idUsuario = 0;
+  idEspecialidad = 0;
+  filtro = '';
 
   ngOnInit(): void {
     this.listarUsuarios();
@@ -55,8 +56,8 @@ export class Doctores implements OnInit {
         this.doctores = data._embedded?.doctorDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar doctores:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los doctores', 'error');
       }
     });
   }
@@ -67,8 +68,8 @@ export class Doctores implements OnInit {
         this.usuarios = data._embedded?.usuarioDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar usuarios:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los usuarios', 'error');
       }
     });
   }
@@ -79,8 +80,8 @@ export class Doctores implements OnInit {
         this.especialidades = data._embedded?.especialidadDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar especialidades:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar las especialidades', 'error');
       }
     });
   }
@@ -98,10 +99,15 @@ export class Doctores implements OnInit {
         idEspecialidad: this.idEspecialidad
       };
 
-      this.doctorService.save(doctor).subscribe(() => {
-        alert('Doctor registrado correctamente');
-        this.limpiar();
-        this.listarDoctores();
+      this.doctorService.save(doctor).subscribe({
+        next: () => {
+          Swal.fire('¡Correcto!', 'Doctor registrado correctamente', 'success');
+          this.limpiar();
+          this.listarDoctores();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar el doctor', 'error');
+        }
       });
 
     } else {
@@ -117,10 +123,15 @@ export class Doctores implements OnInit {
         idEspecialidad: this.idEspecialidad
       };
 
-      this.doctorService.update(this.idDoctor, doctor).subscribe(() => {
-        alert('Doctor actualizado correctamente');
-        this.limpiar();
-        this.listarDoctores();
+      this.doctorService.update(this.idDoctor, doctor).subscribe({
+        next: () => {
+          Swal.fire('¡Actualizado!', 'Doctor actualizado correctamente', 'success');
+          this.limpiar();
+          this.listarDoctores();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar el doctor', 'error');
+        }
       });
     }
   }
@@ -140,25 +151,46 @@ export class Doctores implements OnInit {
 
     setTimeout(() => {
       document.querySelector('.app-content')?.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+        top: 0,
+        behavior: 'smooth'
+      });
     }, 100);
   }
 
   eliminar(id: number): void {
-    if (confirm('¿Estas seguro que deseas eliminar este doctor?')) {
-      this.doctorService.delete(id).subscribe(() => {
-        alert('Doctor eliminado correctamente');
-        this.listarDoctores();
-      });
-    }
+    Swal.fire({
+      title: '¿Eliminar doctor?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.doctorService.delete(id).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'Doctor eliminado correctamente', 'success');
+            this.listarDoctores();
+          },
+          error: () => {
+            Swal.fire(
+              'No se puede eliminar',
+              'Este doctor está relacionado con citas u otros registros.',
+              'error'
+            );
+          }
+        });
+      }
+    });
   }
+
   doctoresFiltrados(): Doctor[] {
-  return this.doctores.filter(doctor =>
-    doctor.nombres.toLowerCase().includes(this.filtro.toLowerCase()) ||
-    doctor.apellidos.toLowerCase().includes(this.filtro.toLowerCase()) ||
-    doctor.correoProfesional.toLowerCase().includes(this.filtro.toLowerCase())
+    return this.doctores.filter(doctor =>
+      doctor.nombres.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      doctor.apellidos.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      doctor.correoProfesional.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
 

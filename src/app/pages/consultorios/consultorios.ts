@@ -1,15 +1,17 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import Swal from "sweetalert2";
+
 import { ConsultorioService } from "../../services/consultorio";
 import { Consultorio } from "../../models/consultorio";
 
 @Component({
-  selector:'app-consultorios',
-  standalone:true,
-  imports:[CommonModule,FormsModule],
-  templateUrl:'./consultorios.html',
-  styleUrl:'./consultorios.css'
+  selector: 'app-consultorios',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './consultorios.html',
+  styleUrl: './consultorios.css'
 })
 export class Consultorios implements OnInit {
 
@@ -18,12 +20,12 @@ export class Consultorios implements OnInit {
 
   consultorios: Consultorio[] = [];
 
-  idConsultorio: number = 0;
-  numero: string = '';
-  ubicacion: string = '';
-  piso: number = 1;
-  estado: boolean = true;
-  filtro: string = '';
+  idConsultorio = 0;
+  numero = '';
+  ubicacion = '';
+  piso = 1;
+  estado = true;
+  filtro = '';
 
   ngOnInit(): void {
     this.listar();
@@ -35,16 +37,14 @@ export class Consultorios implements OnInit {
         this.consultorios = data._embedded?.consultorioDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar consultorios:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los consultorios.', 'error');
       }
     });
   }
 
   guardar(): void {
-
     if (this.idConsultorio === 0) {
-
       const consultorio = {
         numero: this.numero,
         ubicacion: this.ubicacion,
@@ -52,14 +52,18 @@ export class Consultorios implements OnInit {
         estado: this.estado
       };
 
-      this.service.save(consultorio).subscribe(() => {
-        alert('Consultorio registrado correctamente');
-        this.limpiar();
-        this.listar();
+      this.service.save(consultorio).subscribe({
+        next: () => {
+          Swal.fire('¡Correcto!', 'Consultorio registrado correctamente.', 'success');
+          this.limpiar();
+          this.listar();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar el consultorio.', 'error');
+        }
       });
 
     } else {
-
       const consultorio: Consultorio = {
         idConsultorio: this.idConsultorio,
         numero: this.numero,
@@ -68,10 +72,15 @@ export class Consultorios implements OnInit {
         estado: this.estado
       };
 
-      this.service.update(this.idConsultorio, consultorio).subscribe(() => {
-        alert('Consultorio actualizado correctamente');
-        this.limpiar();
-        this.listar();
+      this.service.update(this.idConsultorio, consultorio).subscribe({
+        next: () => {
+          Swal.fire('¡Actualizado!', 'Consultorio actualizado correctamente.', 'success');
+          this.limpiar();
+          this.listar();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar el consultorio.', 'error');
+        }
       });
     }
   }
@@ -82,21 +91,50 @@ export class Consultorios implements OnInit {
     this.ubicacion = consultorio.ubicacion;
     this.piso = consultorio.piso;
     this.estado = consultorio.estado;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      document.querySelector('.app-content')?.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }, 100);
   }
 
   eliminar(id: number): void {
-    if (confirm('¿Seguro que deseas eliminar este consultorio?')) {
-      this.service.delete(id).subscribe(() => {
-        alert('Consultorio eliminado correctamente');
-        this.listar();
-      });
-    }
+    Swal.fire({
+      title: '¿Eliminar consultorio?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.delete(id).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'Consultorio eliminado correctamente.', 'success');
+            this.listar();
+          },
+          error: () => {
+            Swal.fire(
+              'No se puede eliminar',
+              'Este consultorio está relacionado con una o más citas.',
+              'error'
+            );
+          }
+        });
+      }
+    });
   }
 
   consultoriosFiltrados(): Consultorio[] {
-  return this.consultorios.filter(consultorio =>
-    consultorio.numero.toLowerCase().includes(this.filtro.toLowerCase()) ||
-    consultorio.ubicacion.toLowerCase().includes(this.filtro.toLowerCase())
+    return this.consultorios.filter(consultorio =>
+      consultorio.numero.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      consultorio.ubicacion.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
 

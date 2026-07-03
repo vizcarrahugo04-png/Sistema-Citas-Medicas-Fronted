@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import Swal from "sweetalert2";
 
 import { CitaMedicaService } from "../../services/cita-medica";
 import { PacienteService } from "../../services/paciente";
@@ -36,16 +37,16 @@ export class CitasMedicas implements OnInit {
   horarios: HorarioDoctor[] = [];
   consultorios: Consultorio[] = [];
 
-  idCita: number = 0;
-  fecha: string = '';
-  hora: string = '';
-  motivo: string = '';
-  estado: string = 'PENDIENTE';
-  idPaciente: number = 0;
-  idDoctor: number = 0;
-  idHorario: number = 0;
-  idConsultorio: number = 0;
-  filtro: string = '';
+  idCita = 0;
+  fecha = '';
+  hora = '';
+  motivo = '';
+  estado = 'PENDIENTE';
+  idPaciente = 0;
+  idDoctor = 0;
+  idHorario = 0;
+  idConsultorio = 0;
+  filtro = '';
 
   ngOnInit(): void {
     this.listarCitas();
@@ -61,8 +62,8 @@ export class CitasMedicas implements OnInit {
         this.citas = data._embedded?.citaMedicaDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar citas:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar las citas.', 'error');
       }
     });
   }
@@ -73,8 +74,8 @@ export class CitasMedicas implements OnInit {
         this.pacientes = data._embedded?.pacienteDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar pacientes:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los pacientes.', 'error');
       }
     });
   }
@@ -85,8 +86,8 @@ export class CitasMedicas implements OnInit {
         this.doctores = data._embedded?.doctorDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar doctores:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los doctores.', 'error');
       }
     });
   }
@@ -97,8 +98,8 @@ export class CitasMedicas implements OnInit {
         this.horarios = data._embedded?.horarioDoctorDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar horarios:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los horarios.', 'error');
       }
     });
   }
@@ -109,16 +110,14 @@ export class CitasMedicas implements OnInit {
         this.consultorios = data._embedded?.consultorioDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar consultorios:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los consultorios.', 'error');
       }
     });
   }
 
   guardar(): void {
-
     if (this.idCita === 0) {
-
       const cita = {
         fecha: this.fecha,
         hora: this.hora,
@@ -130,14 +129,18 @@ export class CitasMedicas implements OnInit {
         idConsultorio: this.idConsultorio
       };
 
-      this.citaService.save(cita).subscribe(() => {
-        alert('Cita registrada correctamente');
-        this.limpiar();
-        this.listarCitas();
+      this.citaService.save(cita).subscribe({
+        next: () => {
+          Swal.fire('¡Correcto!', 'Cita registrada correctamente.', 'success');
+          this.limpiar();
+          this.listarCitas();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar la cita.', 'error');
+        }
       });
 
     } else {
-
       const cita: CitaMedica = {
         idCita: this.idCita,
         fecha: this.fecha,
@@ -150,10 +153,15 @@ export class CitasMedicas implements OnInit {
         idConsultorio: this.idConsultorio
       };
 
-      this.citaService.update(this.idCita, cita).subscribe(() => {
-        alert('Cita actualizada correctamente');
-        this.limpiar();
-        this.listarCitas();
+      this.citaService.update(this.idCita, cita).subscribe({
+        next: () => {
+          Swal.fire('¡Actualizado!', 'Cita actualizada correctamente.', 'success');
+          this.limpiar();
+          this.listarCitas();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar la cita.', 'error');
+        }
       });
     }
   }
@@ -168,22 +176,51 @@ export class CitasMedicas implements OnInit {
     this.idDoctor = cita.idDoctor;
     this.idHorario = cita.idHorario;
     this.idConsultorio = cita.idConsultorio;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      document.querySelector('.app-content')?.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }, 100);
   }
 
   eliminar(id: number): void {
-    if (confirm('¿Seguro que deseas eliminar esta cita?')) {
-      this.citaService.delete(id).subscribe(() => {
-        alert('Cita eliminada correctamente');
-        this.listarCitas();
-      });
-    }
+    Swal.fire({
+      title: '¿Eliminar cita?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.citaService.delete(id).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'Cita eliminada correctamente.', 'success');
+            this.listarCitas();
+          },
+          error: () => {
+            Swal.fire(
+              'No se puede eliminar',
+              'Esta cita está relacionada con un historial.',
+              'error'
+            );
+          }
+        });
+      }
+    });
   }
 
   citasFiltradas(): CitaMedica[] {
-  return this.citas.filter(cita =>
-    cita.fecha.toLowerCase().includes(this.filtro.toLowerCase()) ||
-    cita.motivo.toLowerCase().includes(this.filtro.toLowerCase()) ||
-    cita.estado.toLowerCase().includes(this.filtro.toLowerCase())
+    return this.citas.filter(cita =>
+      cita.fecha.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      cita.motivo.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      cita.estado.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
 

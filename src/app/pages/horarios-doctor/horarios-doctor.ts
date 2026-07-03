@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 import { HorarioDoctorService } from '../../services/horario-doctor';
 import { DoctorService } from '../../services/doctor';
@@ -24,14 +25,14 @@ export class HorariosDoctor implements OnInit {
   horarios: HorarioDoctor[] = [];
   doctores: Doctor[] = [];
 
-  idHorario: number = 0;
-  dia: string = '';
-  horaInicio: string = '';
-  horaFin: string = '';
-  cuposDisponibles: number = 1;
-  estado: boolean = true;
-  idDoctor: number = 0;
-  filtro: string = '';
+  idHorario = 0;
+  dia = '';
+  horaInicio = '';
+  horaFin = '';
+  cuposDisponibles = 1;
+  estado = true;
+  idDoctor = 0;
+  filtro = '';
 
   ngOnInit(): void {
     this.listarHorarios();
@@ -44,8 +45,12 @@ export class HorariosDoctor implements OnInit {
         this.horarios = data._embedded?.horarioDoctorDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar horarios:', error);
+      error: () => {
+        Swal.fire(
+          'Error',
+          'No se pudieron cargar los horarios.',
+          'error'
+        );
       }
     });
   }
@@ -56,13 +61,18 @@ export class HorariosDoctor implements OnInit {
         this.doctores = data._embedded?.doctorDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar doctores:', error);
+      error: () => {
+        Swal.fire(
+          'Error',
+          'No se pudieron cargar los doctores.',
+          'error'
+        );
       }
     });
   }
 
   guardar(): void {
+
     if (this.idHorario === 0) {
 
       const horario = {
@@ -74,10 +84,31 @@ export class HorariosDoctor implements OnInit {
         idDoctor: this.idDoctor
       };
 
-      this.horarioService.save(horario).subscribe(() => {
-        alert('Horario registrado correctamente');
-        this.limpiar();
-        this.listarHorarios();
+      this.horarioService.save(horario).subscribe({
+
+        next: () => {
+
+          Swal.fire(
+            '¡Correcto!',
+            'Horario registrado correctamente.',
+            'success'
+          );
+
+          this.limpiar();
+          this.listarHorarios();
+
+        },
+
+        error: () => {
+
+          Swal.fire(
+            'Error',
+            'No se pudo registrar el horario.',
+            'error'
+          );
+
+        }
+
       });
 
     } else {
@@ -92,15 +123,39 @@ export class HorariosDoctor implements OnInit {
         idDoctor: this.idDoctor
       };
 
-      this.horarioService.update(this.idHorario, horario).subscribe(() => {
-        alert('Horario actualizado correctamente');
-        this.limpiar();
-        this.listarHorarios();
+      this.horarioService.update(this.idHorario, horario).subscribe({
+
+        next: () => {
+
+          Swal.fire(
+            '¡Actualizado!',
+            'Horario actualizado correctamente.',
+            'success'
+          );
+
+          this.limpiar();
+          this.listarHorarios();
+
+        },
+
+        error: () => {
+
+          Swal.fire(
+            'Error',
+            'No se pudo actualizar el horario.',
+            'error'
+          );
+
+        }
+
       });
+
     }
+
   }
 
   editar(horario: HorarioDoctor): void {
+
     this.idHorario = horario.idHorario;
     this.dia = horario.dia;
     this.horaInicio = horario.horaInicio;
@@ -108,24 +163,75 @@ export class HorariosDoctor implements OnInit {
     this.cuposDisponibles = horario.cuposDisponibles;
     this.estado = horario.estado;
     this.idDoctor = horario.idDoctor;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      document.querySelector('.app-content')?.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }, 100);
+
   }
 
   eliminar(id: number): void {
-    if (confirm('¿Seguro que deseas eliminar este horario?')) {
-      this.horarioService.delete(id).subscribe(() => {
-        alert('Horario eliminado correctamente');
-        this.listarHorarios();
-      });
-    }
+
+    Swal.fire({
+      title: '¿Eliminar horario?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        this.horarioService.delete(id).subscribe({
+
+          next: () => {
+
+            Swal.fire(
+              '¡Eliminado!',
+              'Horario eliminado correctamente.',
+              'success'
+            );
+
+            this.listarHorarios();
+
+          },
+
+          error: () => {
+
+            Swal.fire(
+              'No se puede eliminar',
+              'Este horario está relacionado con una o más citas.',
+              'error'
+            );
+
+          }
+
+        });
+
+      }
+
+    });
+
   }
 
   horariosFiltrados(): HorarioDoctor[] {
-  return this.horarios.filter(horario =>
-    horario.dia.toLowerCase().includes(this.filtro.toLowerCase())
+
+    return this.horarios.filter(horario =>
+      horario.dia.toLowerCase().includes(this.filtro.toLowerCase())
     );
+
   }
 
   limpiar(): void {
+
     this.idHorario = 0;
     this.dia = '';
     this.horaInicio = '';
@@ -133,5 +239,7 @@ export class HorariosDoctor implements OnInit {
     this.cuposDisponibles = 1;
     this.estado = true;
     this.idDoctor = 0;
+
   }
+
 }

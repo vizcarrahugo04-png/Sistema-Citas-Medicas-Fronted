@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import Swal from "sweetalert2";
 
 import { HistorialCitaService } from "../../services/historial-cita";
 import { CitaMedicaService } from "../../services/cita-medica";
@@ -24,13 +25,13 @@ export class HistorialCitas implements OnInit {
   historiales: HistorialCita[] = [];
   citas: CitaMedica[] = [];
 
-  idHistorial: number = 0;
-  fechaCambio: string = '';
-  estadoAnterior: string = '';
-  estadoNuevo: string = '';
-  observacion: string = '';
-  idCita: number = 0;
-  filtro: string = '';
+  idHistorial = 0;
+  fechaCambio = '';
+  estadoAnterior = '';
+  estadoNuevo = '';
+  observacion = '';
+  idCita = 0;
+  filtro = '';
 
   ngOnInit(): void {
     this.listarHistoriales();
@@ -43,8 +44,8 @@ export class HistorialCitas implements OnInit {
         this.historiales = data._embedded?.historialCitaDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar historiales:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar los historiales.', 'error');
       }
     });
   }
@@ -55,15 +56,14 @@ export class HistorialCitas implements OnInit {
         this.citas = data._embedded?.citaMedicaDTOList || [];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.log('Error al listar citas:', error);
+      error: () => {
+        Swal.fire('Error', 'No se pudieron cargar las citas.', 'error');
       }
     });
   }
 
   guardar(): void {
     if (this.idHistorial === 0) {
-
       const historial = {
         fechaCambio: this.fechaCambio,
         estadoAnterior: this.estadoAnterior,
@@ -72,14 +72,18 @@ export class HistorialCitas implements OnInit {
         idCita: this.idCita
       };
 
-      this.historialService.save(historial).subscribe(() => {
-        alert('Historial registrado');
-        this.limpiar();
-        this.listarHistoriales();
+      this.historialService.save(historial).subscribe({
+        next: () => {
+          Swal.fire('¡Correcto!', 'Historial registrado correctamente.', 'success');
+          this.limpiar();
+          this.listarHistoriales();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar el historial.', 'error');
+        }
       });
 
     } else {
-
       const historial: HistorialCita = {
         idHistorial: this.idHistorial,
         fechaCambio: this.fechaCambio,
@@ -89,10 +93,15 @@ export class HistorialCitas implements OnInit {
         idCita: this.idCita
       };
 
-      this.historialService.update(this.idHistorial, historial).subscribe(() => {
-        alert('Historial actualizado');
-        this.limpiar();
-        this.listarHistoriales();
+      this.historialService.update(this.idHistorial, historial).subscribe({
+        next: () => {
+          Swal.fire('¡Actualizado!', 'Historial actualizado correctamente.', 'success');
+          this.limpiar();
+          this.listarHistoriales();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar el historial.', 'error');
+        }
       });
     }
   }
@@ -104,21 +113,47 @@ export class HistorialCitas implements OnInit {
     this.estadoNuevo = historial.estadoNuevo;
     this.observacion = historial.observacion;
     this.idCita = historial.idCita;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      document.querySelector('.app-content')?.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }, 100);
   }
 
   eliminar(id: number): void {
-    if (confirm('¿Eliminar historial?')) {
-      this.historialService.delete(id).subscribe(() => {
-        this.listarHistoriales();
-      });
-    }
+    Swal.fire({
+      title: '¿Eliminar historial?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.historialService.delete(id).subscribe({
+          next: () => {
+            Swal.fire('¡Eliminado!', 'Historial eliminado correctamente.', 'success');
+            this.listarHistoriales();
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo eliminar el historial.', 'error');
+          }
+        });
+      }
+    });
   }
 
   historialesFiltrados(): HistorialCita[] {
-  return this.historiales.filter(historial =>
-    historial.estadoAnterior.toLowerCase().includes(this.filtro.toLowerCase()) ||
-    historial.estadoNuevo.toLowerCase().includes(this.filtro.toLowerCase()) ||
-    historial.observacion.toLowerCase().includes(this.filtro.toLowerCase())
+    return this.historiales.filter(historial =>
+      historial.estadoAnterior.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      historial.estadoNuevo.toLowerCase().includes(this.filtro.toLowerCase()) ||
+      historial.observacion.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
 
