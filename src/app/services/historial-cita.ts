@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { HistorialCita } from "../models/historial-cita";
 
 @Injectable({
-  providedIn:'root'
+  providedIn: 'root'
 })
 export class HistorialCitaService {
 
@@ -22,32 +22,22 @@ export class HistorialCitaService {
   }
 
   findAll(): Observable<any> {
-    return this.http.get<any>(
-      this.url,
-      this.getHeaders()
-    );
+    return this.http.get<any>(this.url, this.getHeaders());
+  }
+
+  findMiHistorial(): Observable<any> {
+    return this.http.get<any>(`${this.url}/mi-historial`, this.getHeaders());
   }
 
   save(historial: any): Observable<any> {
-    return this.http.post<any>(
-      this.url,
-      historial,
-      this.getHeaders()
-    );
+    return this.http.post<any>(this.url, historial, this.getHeaders());
   }
 
   update(id: number, historial: HistorialCita): Observable<any> {
-    return this.http.put<any>(
-      `${this.url}/${id}`,
-      historial,
-      this.getHeaders()
-    );
+    return this.http.put<any>(`${this.url}/${id}`, historial, this.getHeaders());
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete<any>(
-      `${this.url}/${id}`,
-      this.getHeaders()
-    );
+    return this.http.delete<any>(`${this.url}/${id}`, this.getHeaders());
   }
 }

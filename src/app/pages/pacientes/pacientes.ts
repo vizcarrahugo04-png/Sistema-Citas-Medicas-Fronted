@@ -40,6 +40,8 @@ export class Pacientes implements OnInit {
   estado = true;
   idUsuario = 0;
   filtro = '';
+  paginaActual = 1;
+  registrosPorPagina = 5;
 
   ngOnInit(): void {
     this.listarPacientes();
@@ -180,6 +182,24 @@ export class Pacientes implements OnInit {
       paciente.dni.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
+
+
+  pacientesPaginados(): Paciente[] {
+  const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+  const fin = inicio + this.registrosPorPagina;
+
+  return this.pacientesFiltrados().slice(inicio, fin);
+}
+
+totalPaginas(): number {
+  return Math.ceil(this.pacientesFiltrados().length / this.registrosPorPagina);
+}
+
+cambiarPagina(pagina: number): void {
+  if (pagina >= 1 && pagina <= this.totalPaginas()) {
+    this.paginaActual = pagina;
+  }
+}
 
   limpiar(): void {
     this.idPaciente = 0;

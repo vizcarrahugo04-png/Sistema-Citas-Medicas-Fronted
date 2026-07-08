@@ -5,85 +5,244 @@
     </p>
 </div>
 
-<div class="row g-4">
+@if (rol === 'Administrador') {
 
-    <div class="col-md-3">
-        <a routerLink="/usuarios" class="dashboard-link">
-            <div class="card shadow-sm border-0 dashboard-card">
-                <div class="card-body">
-                    <div class="icon-box bg-primary">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
+    <div class="row g-4">
 
-                    <h5 class="mt-3">Usuarios</h5>
-                    <p class="text-muted mb-0">Gestión de usuarios</p>
+        <div class="col-md-3">
+            <a routerLink="/usuarios" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-primary">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
 
-                    <div class="mt-3 text-primary fw-bold">
-                        Ir al módulo <i class="bi bi-arrow-right"></i>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
+                        <h5 class="mt-3">Usuarios</h5>
+                        <h2 class="fw-bold text-primary">{{ totalUsuarios }}</h2>
+                        <p class="text-muted mb-0">Usuarios registrados</p>
 
-    <div class="col-md-3">
-        <a routerLink="/pacientes" class="dashboard-link">
-            <div class="card shadow-sm border-0 dashboard-card">
-                <div class="card-body">
-                    <div class="icon-box bg-success">
-                        <i class="bi bi-person-heart"></i>
-                    </div>
-
-                    <h5 class="mt-3">Pacientes</h5>
-                    <p class="text-muted mb-0">Gestión de pacientes</p>
-
-                    <div class="mt-3 text-success fw-bold">
-                        Ir al módulo <i class="bi bi-arrow-right"></i>
+                        <div class="mt-3 text-primary fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
-    </div>
+            </a>
+        </div>
 
-    <div class="col-md-3">
-        <a routerLink="/doctores" class="dashboard-link">
-            <div class="card shadow-sm border-0 dashboard-card">
-                <div class="card-body">
-                    <div class="icon-box bg-warning">
-                        <i class="bi bi-person-badge-fill"></i>
-                    </div>
+        <div class="col-md-3">
+            <a routerLink="/pacientes" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-success">
+                            <i class="bi bi-person-heart"></i>
+                        </div>
 
-                    <h5 class="mt-3">Doctores</h5>
-                    <p class="text-muted mb-0">Gestión médica</p>
+                        <h5 class="mt-3">Pacientes</h5>
+                        <h2 class="fw-bold text-success">{{ totalPacientes }}</h2>
+                        <p class="text-muted mb-0">Pacientes registrados</p>
 
-                    <div class="mt-3 text-warning fw-bold">
-                        Ir al módulo <i class="bi bi-arrow-right"></i>
-                    </div>
-                </div>
-            </div>
-        </a>
-    </div>
-
-    <div class="col-md-3">
-        <a routerLink="/citas-medicas" class="dashboard-link">
-            <div class="card shadow-sm border-0 dashboard-card">
-                <div class="card-body">
-                    <div class="icon-box bg-danger">
-                        <i class="bi bi-calendar-check-fill"></i>
-                    </div>
-
-                    <h5 class="mt-3">Citas Médicas</h5>
-                    <p class="text-muted mb-0">Control de citas</p>
-
-                    <div class="mt-3 text-danger fw-bold">
-                        Ir al módulo <i class="bi bi-arrow-right"></i>
+                        <div class="mt-3 text-success fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a routerLink="/doctores" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-warning">
+                            <i class="bi bi-person-badge-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Doctores</h5>
+                        <h2 class="fw-bold text-warning">{{ totalDoctores }}</h2>
+                        <p class="text-muted mb-0">Doctores registrados</p>
+
+                        <div class="mt-3 text-warning fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a routerLink="/citas-medicas" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-danger">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Citas Médicas</h5>
+                        <h2 class="fw-bold text-danger">{{ totalCitas }}</h2>
+                        <p class="text-muted mb-0">Citas registradas</p>
+
+                        <div class="mt-3 text-danger fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
     </div>
 
-</div>
+    <div class="row g-4 mt-2">
+
+        <div class="col-md-6">
+            <a routerLink="/consultorios" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body text-center">
+                        <div class="icon-box bg-info mx-auto">
+                            <i class="bi bi-building-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Consultorios</h5>
+                        <h2 class="fw-bold text-info">{{ totalConsultorios }}</h2>
+                        <p class="text-muted mb-0">Consultorios registrados</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6">
+            <a routerLink="/horarios-doctor" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body text-center">
+                        <div class="icon-box bg-secondary mx-auto">
+                            <i class="bi bi-clock-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Horarios</h5>
+                        <h2 class="fw-bold text-secondary">{{ totalHorarios }}</h2>
+                        <p class="text-muted mb-0">Horarios registrados</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+}
+
+@if (rol === 'Doctor') {
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <a routerLink="/pacientes" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-success">
+                            <i class="bi bi-person-heart"></i>
+                        </div>
+
+                        <h5 class="mt-3">Pacientes</h5>
+                        <h2 class="fw-bold text-success">{{ totalPacientes }}</h2>
+                        <p class="text-muted mb-0">Ver pacientes registrados</p>
+
+                        <div class="mt-3 text-success fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a routerLink="/citas-medicas" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-danger">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Citas Médicas</h5>
+                        <h2 class="fw-bold text-danger">{{ totalCitas }}</h2>
+                        <p class="text-muted mb-0">Revisar citas médicas</p>
+
+                        <div class="mt-3 text-danger fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a routerLink="/historial-citas" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-primary">
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Historial</h5>
+                        <p class="text-muted mb-0">Ver historial de citas</p>
+
+                        <div class="mt-3 text-primary fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+}
+
+@if (rol === 'Paciente') {
+
+    <div class="row g-4">
+
+
+        <div class="col-md-4">
+            <a routerLink="/citas-medicas" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-danger">
+                            <i class="bi bi-calendar-check-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Mis Citas</h5>
+                        <h2 class="fw-bold text-danger">{{ totalCitas }}</h2>
+                        <p class="text-muted mb-0">Consultar mis citas médicas</p>
+
+                        <div class="mt-3 text-danger fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a routerLink="/historial-citas" class="dashboard-link">
+                <div class="card shadow-sm border-0 dashboard-card">
+                    <div class="card-body">
+                        <div class="icon-box bg-primary">
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                        </div>
+
+                        <h5 class="mt-3">Historial</h5>
+                        <p class="text-muted mb-0">Ver historial de mis citas</p>
+
+                        <div class="mt-3 text-primary fw-bold">
+                            Ir al módulo <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+}
 
 <div class="card shadow-sm border-0 mt-4">
 
@@ -97,7 +256,7 @@
     <div class="card-body">
 
         <div class="row">
-
+            
             <div class="col-md-6">
                 <strong>Correo</strong>
                 <p class="text-muted mb-0">{{ correo }}</p>

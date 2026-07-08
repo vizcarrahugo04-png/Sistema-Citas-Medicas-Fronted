@@ -26,6 +26,8 @@ export class Consultorios implements OnInit {
   piso = 1;
   estado = true;
   filtro = '';
+  paginaActual = 1;
+  registrosPorPagina = 5;
 
   ngOnInit(): void {
     this.listar();
@@ -137,6 +139,24 @@ export class Consultorios implements OnInit {
       consultorio.ubicacion.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
+
+
+  consultoriosPaginados(): Consultorio[] {
+  const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+  const fin = inicio + this.registrosPorPagina;
+
+  return this.consultoriosFiltrados().slice(inicio, fin);
+}
+
+totalPaginas(): number {
+  return Math.ceil(this.consultoriosFiltrados().length / this.registrosPorPagina);
+}
+
+cambiarPagina(pagina: number): void {
+  if (pagina >= 1 && pagina <= this.totalPaginas()) {
+    this.paginaActual = pagina;
+  }
+}
 
   limpiar(): void {
     this.idConsultorio = 0;

@@ -18,7 +18,7 @@
     <div class="card-body">
 
         <form>
-            <div class="row g-3">
+            <div class="row g-3 align-items-end">
 
                 <div class="col-md-4">
                     <label class="form-label">Nombres</label>
@@ -79,7 +79,7 @@
 
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4 d-flex flex-wrap gap-2">
                 <button class="btn btn-primary me-2" type="button" (click)="guardar()">
                     <i class="bi bi-check-circle"></i>
                     {{ idPaciente === 0 ? 'Guardar' : 'Actualizar' }}
@@ -106,7 +106,7 @@
 
     <div class="card-body">
 
-        <div class="row align-items-center mb-3">
+        <div class="row g-3 align-items-center mb-3">
 
             <div class="col-md-6">
                 <div class="input-group shadow-sm">
@@ -152,7 +152,7 @@
                 </thead>
 
                 <tbody>
-                    <tr *ngFor="let Paciente of pacientesFiltrados()">
+                    <tr *ngFor="let Paciente of pacientesPaginados()">
                         <td>{{ Paciente.idPaciente }}</td>
                         <td>{{ Paciente.nombres }}</td>
                         <td>{{ Paciente.apellidos }}</td>
@@ -187,6 +187,31 @@
                 </tbody>
 
             </table>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 mt-3">
+
+    <small class="text-muted">
+        Página {{ paginaActual }} de {{ totalPaginas() || 1 }}
+    </small>
+
+    <div>
+        <button
+            class="btn btn-outline-primary btn-sm me-2"
+            type="button"
+            (click)="cambiarPagina(paginaActual - 1)"
+            [disabled]="paginaActual === 1">
+            Anterior
+        </button>
+
+        <button
+            class="btn btn-outline-primary btn-sm"
+            type="button"
+            (click)="cambiarPagina(paginaActual + 1)"
+            [disabled]="paginaActual === totalPaginas() || totalPaginas() === 0">
+            Siguiente
+        </button>
+    </div>
+
+</div>
 
         </div>
 

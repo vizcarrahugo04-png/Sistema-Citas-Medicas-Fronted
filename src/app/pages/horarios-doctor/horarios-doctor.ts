@@ -33,6 +33,9 @@ export class HorariosDoctor implements OnInit {
   estado = true;
   idDoctor = 0;
   filtro = '';
+  paginaActual = 1;
+  registrosPorPagina = 5;
+  rol = localStorage.getItem('rol');
 
   ngOnInit(): void {
     this.listarHorarios();
@@ -40,20 +43,39 @@ export class HorariosDoctor implements OnInit {
   }
 
   listarHorarios(): void {
-    this.horarioService.findAll().subscribe({
-      next: (data) => {
-        this.horarios = data._embedded?.horarioDoctorDTOList || [];
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        Swal.fire(
-          'Error',
-          'No se pudieron cargar los horarios.',
-          'error'
-        );
+
+  const request =
+    this.rol === 'Doctor'
+      ? this.horarioService.findMisHorarios()
+      : this.horarioService.findAll();
+
+  request.subscribe({
+
+    next: (data: any) => {
+
+      this.horarios = data._embedded?.horarioDoctorDTOList || [];
+
+      if (this.rol === 'Doctor' && this.horarios.length > 0) {
+        this.idDoctor = this.horarios[0].idDoctor;
       }
-    });
-  }
+
+      this.cdr.detectChanges();
+
+    },
+
+    error: () => {
+
+      Swal.fire(
+        'Error',
+        'No se pudieron cargar los horarios.',
+        'error'
+      );
+
+    }
+
+  });
+
+}
 
   listarDoctores(): void {
     this.doctorService.findAll().subscribe({
@@ -229,6 +251,23 @@ export class HorariosDoctor implements OnInit {
     );
 
   }
+
+  horariosPaginados(): HorarioDoctor[] {
+  const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+  const fin = inicio + this.registrosPorPagina;
+
+  return this.horariosFiltrados().slice(inicio, fin);
+}
+
+totalPaginas(): number {
+  return Math.ceil(this.horariosFiltrados().length / this.registrosPorPagina);
+}
+
+cambiarPagina(pagina: number): void {
+  if (pagina >= 1 && pagina <= this.totalPaginas()) {
+    this.paginaActual = pagina;
+  }
+}
 
   limpiar(): void {
 

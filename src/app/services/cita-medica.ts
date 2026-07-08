@@ -3,9 +3,8 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { CitaMedica } from "../models/cita-medica";
 
-
 @Injectable({
-  providedIn:'root'
+  providedIn: 'root'
 })
 export class CitaMedicaService {
 
@@ -28,6 +27,20 @@ export class CitaMedicaService {
       this.getHeaders()
     );
   }
+
+  findMisCitas(): Observable<any> {
+    return this.http.get<any>(
+      `${this.url}/mis-citas`,
+      this.getHeaders()
+    );
+  }
+
+  findMisCitasDoctor(): Observable<any> {
+  return this.http.get<any>(
+    `${this.url}/mis-citas-doctor`,
+    this.getHeaders()
+  );
+}
 
   save(cita: any): Observable<any> {
     return this.http.post<any>(

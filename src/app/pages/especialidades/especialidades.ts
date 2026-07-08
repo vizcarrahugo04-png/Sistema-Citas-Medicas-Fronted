@@ -25,6 +25,8 @@ export class Especialidades implements OnInit {
   descripcion = '';
   estado = true;
   filtro = '';
+  paginaActual = 1;
+  registrosPorPagina = 5;
 
   ngOnInit(): void {
     this.listar();
@@ -195,6 +197,23 @@ export class Especialidades implements OnInit {
     );
 
   }
+
+  especialidadesPaginadas(): Especialidad[] {
+  const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+  const fin = inicio + this.registrosPorPagina;
+
+  return this.especialidadesFiltradas().slice(inicio, fin);
+}
+
+totalPaginas(): number {
+  return Math.ceil(this.especialidadesFiltradas().length / this.registrosPorPagina);
+}
+
+cambiarPagina(pagina: number): void {
+  if (pagina >= 1 && pagina <= this.totalPaginas()) {
+    this.paginaActual = pagina;
+  }
+}
 
   limpiar(): void {
 

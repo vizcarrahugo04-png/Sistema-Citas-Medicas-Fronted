@@ -22,6 +22,8 @@ export class HistorialCitas implements OnInit {
   private citaService = inject(CitaMedicaService);
   private cdr = inject(ChangeDetectorRef);
 
+  rol = localStorage.getItem('rol');
+
   historiales: HistorialCita[] = [];
   citas: CitaMedica[] = [];
 
@@ -32,14 +34,23 @@ export class HistorialCitas implements OnInit {
   observacion = '';
   idCita = 0;
   filtro = '';
+  paginaActual = 1;
+  registrosPorPagina = 5;
 
   ngOnInit(): void {
     this.listarHistoriales();
-    this.listarCitas();
+
+    if (this.rol !== 'Paciente') {
+      this.listarCitas();
+    }
   }
 
   listarHistoriales(): void {
-    this.historialService.findAll().subscribe({
+    const request = this.rol === 'Paciente'
+      ? this.historialService.findMiHistorial()
+      : this.historialService.findAll();
+
+    request.subscribe({
       next: (data) => {
         this.historiales = data._embedded?.historialCitaDTOList || [];
         this.cdr.detectChanges();
@@ -63,15 +74,15 @@ export class HistorialCitas implements OnInit {
   }
 
   guardar(): void {
-    if (this.idHistorial === 0) {
-      const historial = {
-        fechaCambio: this.fechaCambio,
-        estadoAnterior: this.estadoAnterior,
-        estadoNuevo: this.estadoNuevo,
-        observacion: this.observacion,
-        idCita: this.idCita
-      };
+    const historial = {
+      fechaCambio: this.fechaCambio,
+      estadoAnterior: this.estadoAnterior,
+      estadoNuevo: this.estadoNuevo,
+      observacion: this.observacion,
+      idCita: this.idCita
+    };
 
+    if (this.idHistorial === 0) {
       this.historialService.save(historial).subscribe({
         next: () => {
           Swal.fire('¡Correcto!', 'Historial registrado correctamente.', 'success');
@@ -84,16 +95,12 @@ export class HistorialCitas implements OnInit {
       });
 
     } else {
-      const historial: HistorialCita = {
+      const historialUpdate: HistorialCita = {
         idHistorial: this.idHistorial,
-        fechaCambio: this.fechaCambio,
-        estadoAnterior: this.estadoAnterior,
-        estadoNuevo: this.estadoNuevo,
-        observacion: this.observacion,
-        idCita: this.idCita
+        ...historial
       };
 
-      this.historialService.update(this.idHistorial, historial).subscribe({
+      this.historialService.update(this.idHistorial, historialUpdate).subscribe({
         next: () => {
           Swal.fire('¡Actualizado!', 'Historial actualizado correctamente.', 'success');
           this.limpiar();
@@ -150,11 +157,30 @@ export class HistorialCitas implements OnInit {
   }
 
   historialesFiltrados(): HistorialCita[] {
+    const texto = this.filtro.toLowerCase();
+
     return this.historiales.filter(historial =>
-      historial.estadoAnterior.toLowerCase().includes(this.filtro.toLowerCase()) ||
-      historial.estadoNuevo.toLowerCase().includes(this.filtro.toLowerCase()) ||
-      historial.observacion.toLowerCase().includes(this.filtro.toLowerCase())
+      historial.estadoAnterior.toLowerCase().includes(texto) ||
+      historial.estadoNuevo.toLowerCase().includes(texto) ||
+      historial.observacion.toLowerCase().includes(texto)
     );
+  }
+
+  historialesPaginados(): HistorialCita[] {
+    const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+    const fin = inicio + this.registrosPorPagina;
+
+    return this.historialesFiltrados().slice(inicio, fin);
+  }
+
+  totalPaginas(): number {
+    return Math.ceil(this.historialesFiltrados().length / this.registrosPorPagina);
+  }
+
+  cambiarPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginas()) {
+      this.paginaActual = pagina;
+    }
   }
 
   limpiar(): void {

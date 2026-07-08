@@ -77,16 +77,6 @@
                 Dashboard
             </a>
 
-            <a routerLink="/doctores" routerLinkActive="active-link">
-                <i class="bi bi-person-badge-fill"></i>
-                Doctores
-            </a>
-
-            <a routerLink="/pacientes" routerLinkActive="active-link">
-                <i class="bi bi-person-heart"></i>
-                Pacientes
-            </a>
-
             <a routerLink="/horarios-doctor" routerLinkActive="active-link">
                 <i class="bi bi-clock-fill"></i>
                 Horarios
@@ -105,15 +95,9 @@
         }
 
         @if (rol === 'Paciente') {
-
             <a routerLink="/dashboard" routerLinkActive="active-link">
                 <i class="bi bi-house-fill"></i>
                 Dashboard
-            </a>
-
-            <a routerLink="/pacientes" routerLinkActive="active-link">
-                <i class="bi bi-person-heart"></i>
-                Pacientes
             </a>
 
             <a routerLink="/citas-medicas" routerLinkActive="active-link">
@@ -125,7 +109,6 @@
                 <i class="bi bi-file-earmark-medical-fill"></i>
                 Historial
             </a>
-
         }
 
     </nav>

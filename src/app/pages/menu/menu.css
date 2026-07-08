@@ -115,3 +115,48 @@
     border-left: 4px solid #fff;
     font-weight: 600;
 }
+
+/* ======= Responsive ======== */
+
+@media (max-width: 992px) {
+
+    .sidebar{
+        width: 220px;
+    }
+
+    .app-content{
+        margin-left:220px;
+        padding:20px;
+    }
+
+}
+
+@media (max-width:768px){
+
+    .sidebar{
+
+        position:fixed;
+        left:-260px;
+        top:0;
+
+        width:260px;
+        height:100vh;
+
+        transition:.3s;
+        z-index:1000;
+
+    }
+
+    .sidebar.show{
+        left:0;
+    }
+
+    .app-content{
+
+        margin-left:0;
+        width:100%;
+        padding:15px;
+
+    }
+
+}

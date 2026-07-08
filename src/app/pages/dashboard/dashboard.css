@@ -40,3 +40,13 @@
 .icon-box {
     transition: 0.25s;
 }
+
+@media (max-width:768px){
+
+    .dashboard-card{
+
+        margin-bottom:15px;
+
+    }
+
+}

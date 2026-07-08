@@ -28,6 +28,13 @@ export class HorarioDoctorService {
     );
   }
 
+  findMisHorarios(): Observable<any> {
+  return this.http.get<any>(
+    `${this.url}/mis-horarios`,
+    this.getHeaders()
+  );
+}
+
   save(horario: any): Observable<any> {
     return this.http.post<any>(
       this.url,

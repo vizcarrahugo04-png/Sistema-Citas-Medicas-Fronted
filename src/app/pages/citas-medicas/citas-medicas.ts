@@ -31,6 +31,8 @@ export class CitasMedicas implements OnInit {
   private horarioService = inject(HorarioDoctorService);
   private cdr = inject(ChangeDetectorRef);
 
+  rol = localStorage.getItem('rol');
+
   citas: CitaMedica[] = [];
   pacientes: Paciente[] = [];
   doctores: Doctor[] = [];
@@ -47,26 +49,47 @@ export class CitasMedicas implements OnInit {
   idHorario = 0;
   idConsultorio = 0;
   filtro = '';
+  paginaActual = 1;
+  registrosPorPagina = 5;
 
   ngOnInit(): void {
     this.listarCitas();
-    this.listarPacientes();
+
+    if (this.rol !== 'Paciente') {
+      this.listarPacientes();
+    }
+
     this.listarDoctores();
     this.listarHorarios();
     this.listarConsultorios();
   }
 
   listarCitas(): void {
-    this.citaService.findAll().subscribe({
-      next: (data) => {
-        this.citas = data._embedded?.citaMedicaDTOList || [];
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        Swal.fire('Error', 'No se pudieron cargar las citas.', 'error');
-      }
-    });
+  let request;
+
+  if (this.rol === 'Paciente') {
+    request = this.citaService.findMisCitas();
+  } else if (this.rol === 'Doctor') {
+    request = this.citaService.findMisCitasDoctor();
+  } else {
+    request = this.citaService.findAll();
   }
+
+  request.subscribe({
+    next: (data: any) => {
+      this.citas = data._embedded?.citaMedicaDTOList || [];
+
+      if (this.rol === 'Paciente' && this.citas.length > 0) {
+        this.idPaciente = this.citas[0].idPaciente;
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      Swal.fire('Error', 'No se pudieron cargar las citas.', 'error');
+    }
+  });
+}
 
   listarPacientes(): void {
     this.pacienteService.findAll().subscribe({
@@ -117,18 +140,27 @@ export class CitasMedicas implements OnInit {
   }
 
   guardar(): void {
-    if (this.idCita === 0) {
-      const cita = {
-        fecha: this.fecha,
-        hora: this.hora,
-        motivo: this.motivo,
-        estado: this.estado,
-        idPaciente: this.idPaciente,
-        idDoctor: this.idDoctor,
-        idHorario: this.idHorario,
-        idConsultorio: this.idConsultorio
-      };
+    if (this.rol === 'Paciente' && this.idPaciente === 0) {
+      Swal.fire(
+        'Falta configurar',
+        'Para que el paciente cree citas automáticamente falta obtener su idPaciente desde el backend.',
+        'warning'
+      );
+      return;
+    }
 
+    const cita = {
+      fecha: this.fecha,
+      hora: this.hora,
+      motivo: this.motivo,
+      estado: this.estado,
+      idPaciente: this.idPaciente,
+      idDoctor: this.idDoctor,
+      idHorario: this.idHorario,
+      idConsultorio: this.idConsultorio
+    };
+
+    if (this.idCita === 0) {
       this.citaService.save(cita).subscribe({
         next: () => {
           Swal.fire('¡Correcto!', 'Cita registrada correctamente.', 'success');
@@ -139,21 +171,13 @@ export class CitasMedicas implements OnInit {
           Swal.fire('Error', 'No se pudo registrar la cita.', 'error');
         }
       });
-
     } else {
-      const cita: CitaMedica = {
+      const citaUpdate: CitaMedica = {
         idCita: this.idCita,
-        fecha: this.fecha,
-        hora: this.hora,
-        motivo: this.motivo,
-        estado: this.estado,
-        idPaciente: this.idPaciente,
-        idDoctor: this.idDoctor,
-        idHorario: this.idHorario,
-        idConsultorio: this.idConsultorio
+        ...cita
       };
 
-      this.citaService.update(this.idCita, cita).subscribe({
+      this.citaService.update(this.idCita, citaUpdate).subscribe({
         next: () => {
           Swal.fire('¡Actualizado!', 'Cita actualizada correctamente.', 'success');
           this.limpiar();
@@ -205,11 +229,7 @@ export class CitasMedicas implements OnInit {
             this.listarCitas();
           },
           error: () => {
-            Swal.fire(
-              'No se puede eliminar',
-              'Esta cita está relacionada con un historial.',
-              'error'
-            );
+            Swal.fire('No se puede eliminar', 'Esta cita está relacionada con un historial.', 'error');
           }
         });
       }
@@ -217,11 +237,30 @@ export class CitasMedicas implements OnInit {
   }
 
   citasFiltradas(): CitaMedica[] {
+    const texto = this.filtro.toLowerCase();
+
     return this.citas.filter(cita =>
-      cita.fecha.toLowerCase().includes(this.filtro.toLowerCase()) ||
-      cita.motivo.toLowerCase().includes(this.filtro.toLowerCase()) ||
-      cita.estado.toLowerCase().includes(this.filtro.toLowerCase())
+      cita.fecha.toLowerCase().includes(texto) ||
+      cita.motivo.toLowerCase().includes(texto) ||
+      cita.estado.toLowerCase().includes(texto)
     );
+  }
+
+  citasPaginadas(): CitaMedica[] {
+    const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+    const fin = inicio + this.registrosPorPagina;
+
+    return this.citasFiltradas().slice(inicio, fin);
+  }
+
+  totalPaginas(): number {
+    return Math.ceil(this.citasFiltradas().length / this.registrosPorPagina);
+  }
+
+  cambiarPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginas()) {
+      this.paginaActual = pagina;
+    }
   }
 
   limpiar(): void {
@@ -230,7 +269,11 @@ export class CitasMedicas implements OnInit {
     this.hora = '';
     this.motivo = '';
     this.estado = 'PENDIENTE';
-    this.idPaciente = 0;
+
+    if (this.rol !== 'Paciente') {
+      this.idPaciente = 0;
+    }
+
     this.idDoctor = 0;
     this.idHorario = 0;
     this.idConsultorio = 0;

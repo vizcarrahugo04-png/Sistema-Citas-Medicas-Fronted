@@ -37,6 +37,9 @@ export class Usuarios implements OnInit {
   idRol = 0;
   filtro = '';
 
+  paginaActual = 1;
+  registrosPorPagina = 5;
+
   ngOnInit(): void {
     this.listarUsuarios();
     this.listarRoles();
@@ -158,10 +161,29 @@ export class Usuarios implements OnInit {
   }
 
   usuariosFiltrados(): Usuario[] {
+    const texto = this.filtro.toLowerCase();
+
     return this.usuarios.filter(usuario =>
-      usuario.username.toLowerCase().includes(this.filtro.toLowerCase()) ||
-      usuario.correo.toLowerCase().includes(this.filtro.toLowerCase())
+      usuario.username.toLowerCase().includes(texto) ||
+      usuario.correo.toLowerCase().includes(texto)
     );
+  }
+
+  usuariosPaginados(): Usuario[] {
+    const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+    const fin = inicio + this.registrosPorPagina;
+
+    return this.usuariosFiltrados().slice(inicio, fin);
+  }
+
+  totalPaginas(): number {
+    return Math.ceil(this.usuariosFiltrados().length / this.registrosPorPagina);
+  }
+
+  cambiarPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginas()) {
+      this.paginaActual = pagina;
+    }
   }
 
   limpiar(): void {

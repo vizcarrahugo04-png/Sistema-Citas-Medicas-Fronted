@@ -43,6 +43,8 @@ export class Doctores implements OnInit {
   idUsuario = 0;
   idEspecialidad = 0;
   filtro = '';
+  paginaActual = 1;
+  registrosPorPagina = 5;
 
   ngOnInit(): void {
     this.listarUsuarios();
@@ -193,6 +195,23 @@ export class Doctores implements OnInit {
       doctor.correoProfesional.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
+
+doctoresPaginados(): Doctor[] {
+  const inicio = (this.paginaActual - 1) * this.registrosPorPagina;
+  const fin = inicio + this.registrosPorPagina;
+
+  return this.doctoresFiltrados().slice(inicio, fin);
+}
+
+totalPaginas(): number {
+  return Math.ceil(this.doctoresFiltrados().length / this.registrosPorPagina);
+}
+
+cambiarPagina(pagina: number): void {
+  if (pagina >= 1 && pagina <= this.totalPaginas()) {
+    this.paginaActual = pagina;
+  }
+}
 
   limpiar(): void {
     this.idDoctor = 0;

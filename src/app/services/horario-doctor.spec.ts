@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HorarioDoctor } from './horario-doctor';
+import { HorarioDoctorService } from './horario-doctor';
 
 describe('HorarioDoctor', () => {
-  let service: HorarioDoctor;
+  let service: HorarioDoctorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(HorarioDoctor);
+    service = TestBed.inject(HorarioDoctorService);
   });
 
   it('should be created', () => {
